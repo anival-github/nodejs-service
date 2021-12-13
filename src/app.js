@@ -1,24 +1,53 @@
-const express = require('express');
-const swaggerUI = require('swagger-ui-express');
-const path = require('path');
-const YAML = require('yamljs');
+// const express = require('express');
+// const swaggerUI = require('swagger-ui-express');
+// const path = require('path');
+// const YAML = require('yamljs');
+// const userRouter = require('./resources/users/user.router');
+
+// const app = express();
+// const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
+
+// app.use(express.json());
+
+// app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
+// app.use('/', (req, res, next) => {
+//   if (req.originalUrl === '/') {
+//     res.send('Service is running!');
+//     return;
+//   }
+//   next();
+// });
+
+// app.use('/users', userRouter);
+
+// module.exports = app;
+const http = require('http');
+const { ROUTES } = require('./common/routes');
 const userRouter = require('./resources/users/user.router');
+const boardsRouter = require('./resources/boards/board.router');
+const errorHandler = require('./common/errorHandler');
+const tasksRouter = require('./resources/tasks/task.router');
 
-const app = express();
-const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
+const app = http.createServer((req, res) => {
+  try {
+    switch (true) {
+      case !!req.url.match(ROUTES.TASKS) || !!req.url.match(ROUTES.BOARD_ID_TASKS):
+        return tasksRouter(req, res);
 
-app.use(express.json());
+      case !!req.url.match(ROUTES.USERS):
+        return userRouter(req, res);
 
-app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+      case !!req.url.match(ROUTES.BOARDS):{
+        return boardsRouter(req, res);
+      }
 
-app.use('/', (req, res, next) => {
-  if (req.originalUrl === '/') {
-    res.send('Service is running!');
-    return;
+      default:
+        return null;
+    }
+  } catch (error) {
+    return errorHandler.internalServerError(res, { message: error.message });
   }
-  next();
 });
-
-app.use('/users', userRouter);
 
 module.exports = app;
