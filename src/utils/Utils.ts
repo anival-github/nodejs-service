@@ -1,10 +1,17 @@
-import { ITaskToCreate } from './../resources/tasks/task.model';
-import { IUserToCreate } from './../resources/users/user.model';
+import { ITaskToCreate } from "../resources/tasks/task.model";
+import { IUserToCreate } from "../resources/users/user.model";
 import { IBoardToCreate } from "../resources/boards/board.model";
 import { HTTP_REQUEST, HTTP_RESPONCE } from "../types";
 
-export type GetBodyDataType = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => Promise<IUserToCreate | ITaskToCreate | IBoardToCreate>;
+export const getErrorMessage = (error: unknown) => {
+  if (error instanceof Error) {
+    return error.message
+  }
 
+  return String(error)
+}
+
+export type GetBodyDataType = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => Promise<IUserToCreate | ITaskToCreate | IBoardToCreate>;
 
 export const getBodyData: GetBodyDataType = (req, res) => new Promise((resolve) => {
   try {
@@ -66,23 +73,3 @@ export const extractSecondId = (req: HTTP_REQUEST) => {
 
   return url.pathname.split('/')[4]
 };
-
-export const splitChunks = (array = [], size: number) => {
-  const results = [];
-
-  while (array.length) {
-    const chunk = array.splice(0, size);
-
-    results.push(chunk);
-  }
-
-  return results;
-};
-
-export const getErrorMessage = (error: unknown) => {
-  if (error instanceof Error) {
-    return error.message
-  }
-
-  return String(error)
-}

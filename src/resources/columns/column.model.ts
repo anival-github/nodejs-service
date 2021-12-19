@@ -7,7 +7,9 @@ interface IColumnToCreate {
 
 class Column {
   id: string;
+
   title: string;
+
   order: number;
 
   constructor({

@@ -8,7 +8,9 @@ export interface IBoardToCreate {
 
 export class BoardClass {
   id: string;
+
   title: string;
+
   columns: Column[];
 
   constructor({

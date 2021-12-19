@@ -9,6 +9,7 @@ import TaskService from '../tasks/task.service';
 
 class BoardController {
   itemIdName = 'BoardId';
+
   itemName = 'Board';
 
   async getAll(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
@@ -43,7 +44,7 @@ class BoardController {
 
     const newItem = await BoardServiceInstance.createOne(validatedData);
 
-    return SuccessHandler.created(res, newItem);
+    SuccessHandler.created(res, newItem);
   }
 
   async updateOne (req: HTTP_REQUEST, res: HTTP_RESPONCE) {

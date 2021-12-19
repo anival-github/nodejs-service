@@ -1,7 +1,6 @@
-import { IUserToResponse } from './../resources/users/user.model';
+import User, { IUserToResponse } from "../resources/users/user.model";
 import { BoardClass } from "../resources/boards/board.model";
 import TaskClass from "../resources/tasks/task.model";
-import User from "../resources/users/user.model";
 import { HTTP_RESPONCE } from "../types";
 
 export type DataType = Record<string, string | number>;

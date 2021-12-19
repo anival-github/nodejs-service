@@ -1,12 +1,11 @@
-import { HTTP_RESPONCE } from './../../types';
 import { validate } from 'uuid';
+import { HTTP_RESPONCE , HTTP_REQUEST } from "../../types";
 import User, { IUserToCreate } from './user.model';
 import usersService from './user.service';
 import TaskServiceInstance from '../tasks/task.service';
 import successHandler from '../../common/successHandler';
 import { getBodyData, extractFirstId } from '../../utils/Utils';
 import errorHandler from '../../common/errorHandler';
-import { HTTP_REQUEST } from '../../types';
 
 class UserController {
   getAll = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {

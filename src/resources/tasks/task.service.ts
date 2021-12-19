@@ -1,17 +1,7 @@
 import taskMemoryRepository from "./task.memory.repository";
 import TaskClass, { ITaskToCreate } from "./task.model";
 
-export class TaskService {
-  /**
-   * Returns the sum of two numbers.
-   *
-   * @remarks
-   * This is our math utilities lib for shared projects.
-   *
-   * @param x - The first input number
-   * @param y - The second input number
-   * @returns The sum of `x` and `y`
-   */
+class TaskService {
   getAll() {
     return taskMemoryRepository.getAll();
   }

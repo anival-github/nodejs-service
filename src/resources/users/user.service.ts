@@ -1,7 +1,7 @@
 import usersRepo from './user.memory.repository';
 import { IUserToCreate } from './user.model';
 
-class userService {
+class UserService {
   getAll = () => usersRepo.getAll();
 
   getOne = (id: string) => usersRepo.getOne(id);
@@ -13,4 +13,4 @@ class userService {
   updateOne = (id: string, newUserData: { name: string; login: string; password: string }) => usersRepo.updateOne(id, newUserData);
 }
 
-export default new userService();
+export default new UserService();

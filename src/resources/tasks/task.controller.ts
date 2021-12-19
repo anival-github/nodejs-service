@@ -8,6 +8,7 @@ import { getValidatedData } from './task.validatior';
 
 class TaskController {
   itemIdName = 'TaskId';
+
   itemName = 'TaskClass';
 
   async getAll(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
@@ -42,7 +43,7 @@ class TaskController {
 
     const newItem = await TaskServiceInstance.createOne(validatedData);
 
-    return SuccessHandler.created(res, newItem);
+    SuccessHandler.created(res, newItem);
   }
 
   async updateOne (req: HTTP_REQUEST, res: HTTP_RESPONCE) {

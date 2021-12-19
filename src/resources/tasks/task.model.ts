@@ -17,13 +17,19 @@ export interface ITaskToCreate {
   columnId: string | null;
 }
 
-export class TaskClass {
+class TaskClass {
   id: string;
+
   title: string;
+
   order: number;
+
   description: string;
+
   userId: string | null;
+
   boardId: string | null;
+
   columnId: string | null;
 
   constructor({
