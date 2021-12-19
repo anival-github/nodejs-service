@@ -22,23 +22,27 @@
 // app.use('/users', userRouter);
 
 // module.exports = app;
-const http = require('http');
-const { ROUTES } = require('./common/routes');
-const userRouter = require('./resources/users/user.router');
-const boardsRouter = require('./resources/boards/board.router');
-const errorHandler = require('./common/errorHandler');
-const tasksRouter = require('./resources/tasks/task.router');
+import http from 'http';
+import { ROUTES } from './common/routes';
+import userRouter from './resources/users/user.router';
+import boardsRouter from './resources/boards/board.router';
+import errorHandler from './common/errorHandler';
+import tasksRouter from './resources/tasks/task.router';
+import { HTTP_REQUEST, HTTP_RESPONCE } from './types';
+import { getErrorMessage } from './utils/Utils';
 
-const app = http.createServer((req, res) => {
+const app = http.createServer((req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
   try {
+    const url = new URL(req.url || '', `http://${req.headers.host}`);
+
     switch (true) {
-      case !!req.url.match(ROUTES.TASKS) || !!req.url.match(ROUTES.BOARD_ID_TASKS):
+      case !!url.pathname.match(ROUTES.TASKS) || !!url.pathname.match(ROUTES.BOARD_ID_TASKS):
         return tasksRouter(req, res);
 
-      case !!req.url.match(ROUTES.USERS):
+      case !!url.pathname.match(ROUTES.USERS):
         return userRouter(req, res);
 
-      case !!req.url.match(ROUTES.BOARDS):{
+      case !!url.pathname.match(ROUTES.BOARDS): {
         return boardsRouter(req, res);
       }
 
@@ -46,8 +50,8 @@ const app = http.createServer((req, res) => {
         return null;
     }
   } catch (error) {
-    return errorHandler.internalServerError(res, { message: error.message });
+    return errorHandler.internalServerError(res, { message: getErrorMessage(error) });
   }
 });
 
-module.exports = app;
+export default app;
