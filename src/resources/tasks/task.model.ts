@@ -32,6 +32,11 @@ class TaskClass {
 
   columnId: string | null;
 
+  /**
+ * Return newly created task
+ * @param task - object with task data
+ * @returns new task
+ */
   constructor({
     title = 'TASK',
     order = 0,
@@ -49,6 +54,11 @@ class TaskClass {
     this.columnId = columnId;
   }
 
+  /**
+ * Return user withot secret field
+ * @param item - object with all task params
+ * @returns object represents task without secret field
+ */
   static toResponse(item: TaskClass): TaskShort {
     const {
       id, title, order, description, userId,

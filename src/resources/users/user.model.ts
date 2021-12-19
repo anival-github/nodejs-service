@@ -39,7 +39,7 @@ class User {
 
   /**
  * Return user withot secret field
- * @param user - http request class IncomingMessage
+ * @param user - object with all user params
  * @returns object represents user without secret field
  */
   static toResponse(user: User): IUserToResponse {

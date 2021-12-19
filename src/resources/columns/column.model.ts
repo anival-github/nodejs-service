@@ -12,6 +12,11 @@ class Column {
 
   order: number;
 
+  /**
+ * Return newly created column
+ * @param column - object with column data
+ * @returns new column
+ */
   constructor({
     title = 'COLUMN',
     order = 0,

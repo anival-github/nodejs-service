@@ -96,16 +96,3 @@ export class TasksRepo {
 }
 
 export default new TasksRepo();
-
-
-// import BaseMemoryRepository from '../../common/base.memory.repository';
-// import TaskClass from './task.model';
-
-// export class TaskMemoryRepositoryClass extends BaseMemoryRepository {
-//   constructor() {
-//     super(TaskClass);
-//   }
-// }
-
-// export default new TaskMemoryRepositoryClass();
-

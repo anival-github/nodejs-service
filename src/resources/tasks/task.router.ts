@@ -4,30 +4,42 @@ import { STRICT_ROUTES } from '../../common/routes';
 import errorHandlers from '../../common/errorHandler';
 import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
 
+/**
+ * Handle task related requests
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
 const tasksRouter = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
   const url = new URL(req.url || '', `http://${req.headers.host}`);
 
   switch (true) {
     case url.pathname.match(STRICT_ROUTES.TASKS) && req.method === HTTP_METHODS.GET:
-      return taskControllerInstance.getAll(req, res);
+      taskControllerInstance.getAll(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.BOARD_ID_TASKS) && req.method === HTTP_METHODS.GET:
-      return taskControllerInstance.getAllByBoardId(req, res);
+      taskControllerInstance.getAllByBoardId(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.BOARD_ID_TASKS_ID) && req.method === HTTP_METHODS.GET:
-      return taskControllerInstance.getOne(req, res);
+      taskControllerInstance.getOne(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.BOARD_ID_TASKS) && req.method === HTTP_METHODS.POST:
-      return taskControllerInstance.createOne(req, res);
+      taskControllerInstance.createOne(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.BOARD_ID_TASKS_ID) && req.method === HTTP_METHODS.PUT:
-      return taskControllerInstance.updateOne(req, res);
+      taskControllerInstance.updateOne(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.BOARD_ID_TASKS_ID) && req.method === HTTP_METHODS.DELETE:
-      return taskControllerInstance.deleteOne(req, res);
+      taskControllerInstance.deleteOne(req, res);
+      break;
 
     default:
-      return errorHandlers.notFound(res, { message: 'Route not found' });
+      errorHandlers.notFound(res, { message: 'Route not found' });
+      break;
   }
 };
 

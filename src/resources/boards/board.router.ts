@@ -4,27 +4,38 @@ import { STRICT_ROUTES } from '../../common/routes';
 import errorHandlers from '../../common/errorHandler';
 import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
 
+/**
+ * Handle board related requests
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
 const boardsRouter = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
   const url = new URL(req.url || '', `http://${req.headers.host}`);
 
   switch (true) {
     case url.pathname.match(STRICT_ROUTES.BOARDS) && req.method === HTTP_METHODS.GET:
-      return BoardController.getAll(req, res);
+      BoardController.getAll(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.BOARDS_ID) && req.method === HTTP_METHODS.GET:
-      return BoardController.getOne(req, res);
+      BoardController.getOne(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.BOARDS) && req.method === HTTP_METHODS.POST:
-      return BoardController.createOne(req, res);
+      BoardController.createOne(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.BOARDS_ID) && req.method === HTTP_METHODS.PUT:
-      return BoardController.updateOne(req, res);
+      BoardController.updateOne(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.BOARDS_ID) && req.method === HTTP_METHODS.DELETE:
-      return BoardController.deleteOne(req, res);
+      BoardController.deleteOne(req, res);
+      break;
 
     default:
-      return errorHandlers.notFound(res, { message: 'Route not found' });
+      errorHandlers.notFound(res, { message: 'Route not found' });
+      break;
   }
 };
 

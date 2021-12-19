@@ -6,6 +6,12 @@ import { IBoardToCreate } from './board.model';
 
 export type GetValidatedDataForBoardType = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => Promise<IBoardToCreate | null>;
 
+/**
+ * Validate board data from request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ * @returns object represents board properties
+ */
 export const getValidatedDataForBoard: GetValidatedDataForBoardType = async (req, res) => {
   const body = await getBodyData(req, res) as IBoardToCreate;
 

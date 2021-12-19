@@ -13,6 +13,11 @@ export class BoardClass {
 
   columns: Column[];
 
+  /**
+ * Return newly created board
+ * @param board - object with board data
+ * @returns new board
+ */
   constructor({
     title = 'BOARD',
     columns = [],

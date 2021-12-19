@@ -127,36 +127,3 @@ class BoardController {
 }
 
 export default new BoardController();
-
-// import BaseControllerClass from '../../common/base.controller';
-// import { BoardServiceInstance } from './board.service';
-// import { TaskServiceInstance, TaskServiceClass } from '../tasks/task.service';
-// import { getValidatedDataForBoard } from './board.validatior';
-// import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
-
-// class BoardControllerClass extends BaseControllerClass {
-//   tasksService: TaskServiceClass;
-
-//   constructor() {
-//     super({
-//       Service: BoardServiceInstance,
-//       itemIdName: 'BoardId',
-//       itemName: 'Board',
-//       getValidatedData: getValidatedDataForBoard,
-//     });
-
-//     this.tasksService = TaskServiceInstance;
-
-//     const superClassDeleteOne = this.deleteOne;
-
-//     this.deleteOne = async function deleteOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
-//       superClassDeleteOne.call(this, req, res);
-
-//       const id = this.extractId(req);
-
-//       this.tasksService.deleteAllByBoardId(id);
-//     };
-//   }
-// }
-
-// export const boardControllerInstance = new BoardControllerClass();

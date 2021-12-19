@@ -14,6 +14,12 @@ interface validatedData {
 
 export type GetValidatedDataType = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => Promise<validatedData | null>;
 
+/**
+ * Validate task data from request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ * @returns object represents task properties
+ */
 export const getValidatedData: GetValidatedDataType = async (req, res) => {
   const body = await getBodyData(req, res) as ITaskToCreate;
   const boardIdFromUrl = extractFirstId(req);
