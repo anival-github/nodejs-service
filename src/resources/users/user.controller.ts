@@ -8,55 +8,80 @@ import { getBodyData, extractFirstId } from '../../utils/Utils';
 import errorHandler from '../../common/errorHandler';
 
 class UserController {
+/**
+ * Handle get all request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
   getAll = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const users = await usersService.getAll();
 
-    return successHandler.OK(res, users.map(User.toResponse));
+    successHandler.OK(res, users.map(User.toResponse));
   };
 
+/**
+ * Handle get one request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
   getOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      return errorHandler.badRequest(res, { message: 'UserId is not valid' });
+      errorHandler.badRequest(res, { message: 'UserId is not valid' });
+      return
     }
 
     const user = await usersService.getOne(id);
 
     if (!user) {
-      return errorHandler.notFound(res, { message: 'User not found' });
+      errorHandler.notFound(res, { message: 'User not found' });
+      return
     }
 
-    return successHandler.OK(res, User.toResponse(user));
+    successHandler.OK(res, User.toResponse(user));
   };
 
+  /**
+ * Handle create one request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
   createOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const body = await getBodyData(req, res) as IUserToCreate;
 
     const { name, login, password } = body;
 
     if (!name || !login || !password) {
-      return errorHandler.badRequest(res, { message: 'Please, specify required fields: name, login, password' });
+      errorHandler.badRequest(res, { message: 'Please, specify required fields: name, login, password' });
+      return
     }
 
     const newUser = await usersService.createOne({ name, login, password });
 
-    return successHandler.created(res, User.toResponse(newUser));
+    successHandler.created(res, User.toResponse(newUser));
   };
 
+  /**
+ * Handle update one request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
   updateOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      return errorHandler.badRequest(res, { message: 'UserId is not valid' });
+      errorHandler.badRequest(res, { message: 'UserId is not valid' });
+      return
     }
 
     const user = await usersService.getOne(id);
 
     if (!user) {
-      return errorHandler.notFound(res, { message: 'User not found' });
+      errorHandler.notFound(res, { message: 'User not found' });
+      return
     }
 
     const { name, login, password } = await getBodyData(req, res) as IUserToCreate;
@@ -69,21 +94,28 @@ class UserController {
 
     const updatedUser = await usersService.updateOne(id, newUserData);
 
-    return successHandler.OK(res, User.toResponse(updatedUser));
+    successHandler.OK(res, User.toResponse(updatedUser));
   };
 
+  /**
+ * Handle delete one request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
   deleteOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      return errorHandler.badRequest(res, { message: 'UserId is not valid' });
+      errorHandler.badRequest(res, { message: 'UserId is not valid' });
+      return;
     }
 
     const user = await usersService.getOne(id);
 
     if (!user) {
-      return errorHandler.notFound(res, { message: 'User not found' });
+      errorHandler.notFound(res, { message: 'User not found' });
+      return;
     }
 
     await usersService.deleteOne(id);
@@ -91,7 +123,7 @@ class UserController {
     // When somebody DELETEs User, all Tasks where User is assignee should be updated to put userId = null.
     await TaskServiceInstance.updateMany({ key: 'userId', value: id }, { userId: null });
 
-    return successHandler.noContent(res, { message: 'The user has been deleted' });
+    successHandler.noContent(res, { message: 'The user has been deleted' });
   };
 }
 

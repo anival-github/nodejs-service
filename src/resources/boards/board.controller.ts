@@ -12,29 +12,46 @@ class BoardController {
 
   itemName = 'Board';
 
+  /**
+ * Handle get all request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
   async getAll(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const collection = await BoardServiceInstance.getAll();
 
-    return SuccessHandler.OK(res, collection);
+    SuccessHandler.OK(res, collection);
   }
 
+  /**
+ * Handle get one request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
   async getOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      return ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      return;
     }
 
     const item = await BoardServiceInstance.getOne(id);
 
     if (!item) {
-      return ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      return;
     }
 
-    return SuccessHandler.OK(res, item);
+    SuccessHandler.OK(res, item);
   }
 
+  /**
+ * Handle create one request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
   async createOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const validatedData = await getValidatedDataForBoard(req, res);
 
@@ -47,18 +64,25 @@ class BoardController {
     SuccessHandler.created(res, newItem);
   }
 
+  /**
+ * Handle update one request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
   async updateOne (req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      return ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      return;
     }
 
     const item = await BoardServiceInstance.getOne(id);
 
     if (!item) {
-      return ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      return;
     }
 
     const bodyData = await getBodyData(req, res);
@@ -70,28 +94,35 @@ class BoardController {
 
     const updatedItem = await BoardServiceInstance.updateOne(id, newDataForItem);
 
-    return SuccessHandler.OK(res, updatedItem);
+    SuccessHandler.OK(res, updatedItem);
   }
 
+  /**
+ * Handle delete one request
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
   public async deleteOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      return ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      return;
     }
 
     const item = await BoardServiceInstance.getOne(id);
 
     if (!item) {
-      return ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      return;
     }
 
     await BoardServiceInstance.deleteOne(id);
 
     TaskService.deleteAllByBoardId(id);
 
-    return SuccessHandler.noContent(res, { message: `The ${this.itemName} has been deleted` });
+    SuccessHandler.noContent(res, { message: `The ${this.itemName} has been deleted` });
   }
 }
 

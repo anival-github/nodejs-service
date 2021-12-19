@@ -3,6 +3,11 @@ import { IUserToCreate } from "../resources/users/user.model";
 import { IBoardToCreate } from "../resources/boards/board.model";
 import { HTTP_REQUEST, HTTP_RESPONCE } from "../types";
 
+/**
+ * Returns error message
+ * @param error - object unknown
+ * @returns error message string
+ */
 export const getErrorMessage = (error: unknown) => {
   if (error instanceof Error) {
     return error.message
@@ -13,6 +18,12 @@ export const getErrorMessage = (error: unknown) => {
 
 export type GetBodyDataType = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => Promise<IUserToCreate | ITaskToCreate | IBoardToCreate>;
 
+/**
+ * Returns parsed body
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ * @returns parsed body
+ */
 export const getBodyData: GetBodyDataType = (req, res) => new Promise((resolve) => {
   try {
     let body = '';
@@ -35,40 +46,25 @@ export const getBodyData: GetBodyDataType = (req, res) => new Promise((resolve) 
   }
 });
 
-export const validatePersonProperties = (
-  { name, age, hobbies }: { name: string, age: number, hobbies: string[] },
-  res: HTTP_RESPONCE,
-) => {
-  if (name && typeof name !== 'string') {
-    res.writeHead(400, { 'Content-type': 'application/json' });
-    res.end(JSON.stringify({ message: 'Name must be of type "string"' }));
-    return false;
-  }
+export type ExtractIdType = (req: HTTP_REQUEST) => string;
 
-  if (age && typeof age !== 'number') {
-    res.writeHead(400, { 'Content-type': 'application/json' });
-    res.end(JSON.stringify({ message: 'Age must be of type "number"' }));
-    return false;
-  }
-
-  if (hobbies && !hobbies.every((element) => typeof element === 'string')) {
-    res.writeHead(400, { 'Content-type': 'application/json' });
-    res.end(JSON.stringify({ message: 'Each hobby must be of type "string"' }));
-    return false;
-  }
-
-  return true;
-};
-
-export type ExtractFirstIdType = (req: HTTP_REQUEST) => string;
-
-export const extractFirstId: ExtractFirstIdType = (req) => {
+/**
+ * Returns first id param from url
+ * @param req - http request class IncomingMessage
+ * @returns first id param string
+ */
+export const extractFirstId: ExtractIdType = (req) => {
   const url = new URL(req.url || '', `http://${req.headers.host}`);
 
   return url.pathname.split('/')[2]
 };
 
-export const extractSecondId = (req: HTTP_REQUEST) => {
+/**
+ * Returns second id param from url
+ * @param req - http request class IncomingMessage
+ * @returns second id param string
+ */
+export const extractSecondId: ExtractIdType = (req) => {
   const url = new URL(req.url || '', `http://${req.headers.host}`);
 
   return url.pathname.split('/')[4]

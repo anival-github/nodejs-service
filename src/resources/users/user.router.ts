@@ -15,27 +15,37 @@ import userController from './user.controller';
 import HTTP_METHODS from '../../common/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
 
+/**
+ * Handle user related requests
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
 const userRouter = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
   const url = new URL(req.url || '', `http://${req.headers.host}`);
 
   switch (true) {
     case url.pathname.match(STRICT_ROUTES.USERS) && req.method === HTTP_METHODS.GET:
-      return userController.getAll(req, res);
+      userController.getAll(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.USERS_ID) && req.method === HTTP_METHODS.GET:
-      return userController.getOne(req, res);
+      userController.getOne(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.USERS) && req.method === HTTP_METHODS.POST:
-      return userController.createOne(req, res);
+      userController.createOne(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.USERS_ID) && req.method === HTTP_METHODS.PUT:
-      return userController.updateOne(req, res);
+      userController.updateOne(req, res);
+      break;
 
     case url.pathname.match(STRICT_ROUTES.USERS_ID) && req.method === HTTP_METHODS.DELETE:
-      return userController.deleteOne(req, res);
+      userController.deleteOne(req, res);
+      break;
 
     default:
-      return null;
+      break;
   }
 };
 
