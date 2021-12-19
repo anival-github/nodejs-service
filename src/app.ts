@@ -31,26 +31,35 @@ import tasksRouter from './resources/tasks/task.router';
 import { HTTP_REQUEST, HTTP_RESPONCE } from './types';
 import { getErrorMessage } from './utils/Utils';
 
-const app = http.createServer((req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
+const app = http.createServer(
+  /**
+ * Handle app requests
+ * @param req - http request class IncomingMessage
+ * @param res - http response class ServerResponse
+ */
+  (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
   try {
     const url = new URL(req.url || '', `http://${req.headers.host}`);
 
     switch (true) {
       case !!url.pathname.match(ROUTES.TASKS) || !!url.pathname.match(ROUTES.BOARD_ID_TASKS):
-        return tasksRouter(req, res);
+        tasksRouter(req, res);
+        break;
 
       case !!url.pathname.match(ROUTES.USERS):
-        return userRouter(req, res);
+        userRouter(req, res);
+        break;
 
       case !!url.pathname.match(ROUTES.BOARDS): {
-        return boardsRouter(req, res);
+        boardsRouter(req, res);
+        break;
       }
 
       default:
-        return null;
+        break;
     }
   } catch (error) {
-    return errorHandler.internalServerError(res, { message: getErrorMessage(error) });
+    errorHandler.internalServerError(res, { message: getErrorMessage(error) });
   }
 });
 
