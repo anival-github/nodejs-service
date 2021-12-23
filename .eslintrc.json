@@ -30,11 +30,6 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    // "eslint:recommended",
-    // "plugin:node/recommended",
-    // "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    // "airbnb-base",
-    // "prettier",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
@@ -43,6 +38,8 @@
     "prettier"
   ],
   "rules": {
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
     "import/extensions": "off",
     "linebreak-style": "off",
     "node/no-unsupported-features/es-syntax": "off",
@@ -60,7 +57,5 @@
   "plugins": [
     "@typescript-eslint",
     "eslint-plugin-tsdoc"
-    // "prettier",
-    // "import"
   ]
 }
