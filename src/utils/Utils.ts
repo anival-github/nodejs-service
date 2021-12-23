@@ -16,7 +16,8 @@ export const getErrorMessage = (error: unknown) => {
   return String(error)
 }
 
-export type GetBodyDataType = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => Promise<IUserToCreate | ITaskToCreate | IBoardToCreate>;
+export type RequestBodyDataType = IUserToCreate | ITaskToCreate | IBoardToCreate;
+export type GetBodyDataType = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => Promise<RequestBodyDataType>;
 
 /**
  * Returns parsed body
