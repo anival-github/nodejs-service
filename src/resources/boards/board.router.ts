@@ -1,5 +1,5 @@
 import BoardController from './board.controller';
-import HTTP_METHODS from '../../common/httpMethods';
+import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
 import errorHandlers from '../../common/errorHandler';
 import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
@@ -34,7 +34,7 @@ const boardsRouter = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
       break;
 
     default:
-      errorHandlers.notFound(res, { message: 'Route not found' });
+      errorHandlers.notFound(req, res, { message: 'Route not found' });
       break;
   }
 };

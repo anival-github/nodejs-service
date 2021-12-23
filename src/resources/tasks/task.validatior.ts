@@ -1,29 +1,23 @@
 import { ITaskToCreate } from './task.model';
-import errorHandlers from '../../common/errorHandler';
-import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
-import { getBodyData, extractFirstId } from '../../utils/Utils';
 
-interface validatedData {
-  title: string;
-  order: number;
-  description: string;
-  userId: string | null;
-  boardId: string | null;
-  columnId: string | null;
+interface IValidationResult {
+  valid: boolean,
+  message: string,
+  data: ITaskToCreate | null,
 }
 
-export type GetValidatedDataType = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => Promise<validatedData | null>;
+export type GetValidatedDataType = (
+  body: ITaskToCreate,
+  boardIdFromUrl: string,
+) => IValidationResult;
 
 /**
  * Validate task data from request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- * @returns object represents task properties
+ * @param body - parsed body from HTTP request
+ * @param boardIdFromUrl - parsed board id from HTTP request
+ * @returns object represents validation results
  */
-export const getValidatedData: GetValidatedDataType = async (req, res) => {
-  const body = await getBodyData(req, res) as ITaskToCreate;
-  const boardIdFromUrl = extractFirstId(req);
-
+export const getValidatedData: GetValidatedDataType = (body, boardIdFromUrl) => {
   const {
     title,
     order,
@@ -34,16 +28,23 @@ export const getValidatedData: GetValidatedDataType = async (req, res) => {
   } = body;
 
   if ([title, order, description, userId, boardIdFromBody, columnId].some((elem) => elem === undefined)) {
-    errorHandlers.badRequest(res, { message: 'Please, specify required fields: title, order, description, userId, boardId, columnId,' });
-    return null;
+    return {
+      valid: false,
+      message: 'Please, specify required fields: title, order, description, userId, boardId, columnId.',
+      data: null,
+    };
   }
 
   return {
-    title,
-    order,
-    description,
-    userId,
-    boardId: boardIdFromBody || boardIdFromUrl,
-    columnId,
+    valid: true,
+    message: '',
+    data: {
+      title,
+      order,
+      description,
+      userId,
+      boardId: boardIdFromBody || boardIdFromUrl,
+      columnId,
+    },
   };
 };

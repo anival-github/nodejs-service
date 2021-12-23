@@ -1,7 +1,15 @@
-import { HTTP_RESPONCE } from "../types";
+import { RequestBodyDataType } from "../utils/Utils";
+import HTTP_STATUS_CODES from "../constants/httpResponseStatusCodes";
+import { HTTP_REQUEST, HTTP_RESPONCE } from "../types";
+import { logHttpRequest } from './logger';
+import sendHttpResponse, { ErrorResponseResultType } from "./sendHttpResponse";
 
-type DataType = Record<string, string | number>;
-type HandlerFuncType = (res: HTTP_RESPONCE, data: DataType) => void;
+type HandlerFuncType = (
+  req: HTTP_REQUEST,
+  res: HTTP_RESPONCE,
+  result: ErrorResponseResultType,
+  body?: RequestBodyDataType | "",
+) => void;
 
 export interface IErrorHandler {
   badRequest: HandlerFuncType;
@@ -10,32 +18,46 @@ export interface IErrorHandler {
 }
 
 const ErrorHandler: IErrorHandler = {
-  /**
+/**
  * Send 400 status code response
+ * @param req - http request class IncomingMessage
  * @param res - http response class ServerResponse
- * @param data - data to send in response
+ * @param result - data to send in response
+ * @param body - parsed body from request if any
  */
-  badRequest: (res, data) => {
-    res.writeHead(400, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(data));
+  badRequest: (req, res, result, body = "") => {
+    const statusCode = HTTP_STATUS_CODES.BAD_REQUEST;
+
+    logHttpRequest(req, statusCode, body);
+    sendHttpResponse(res, statusCode, result);
   },
-  /**
+
+/**
  * Send 404 status code response
+ * @param req - http request class IncomingMessage
  * @param res - http response class ServerResponse
- * @param data - data to send in response
+ * @param result - data to send in response
+ * @param body - parsed body from request if any
  */
-  notFound: (res, data) => {
-    res.writeHead(404, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(data));
+  notFound: (req, res, result, body = "") => {
+    const statusCode = HTTP_STATUS_CODES.NOT_FOUND;
+
+    logHttpRequest(req, statusCode, body);
+    sendHttpResponse(res, statusCode, result);
   },
-  /**
+
+/**
  * Send 500 status code response
+ * @param req - http request class IncomingMessage
  * @param res - http response class ServerResponse
- * @param data - data to send in response
+ * @param result - data to send in response
+ * @param body - parsed body from request if any
  */
-  internalServerError: (res, data) => {
-    res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(data));
+  internalServerError: (req, res, result, body = "") => {
+    const statusCode = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
+
+    logHttpRequest(req, statusCode, body);
+    sendHttpResponse(res, statusCode, result);
   },
 };
 

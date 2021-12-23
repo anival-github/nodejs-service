@@ -16,7 +16,7 @@ class UserController {
   getAll = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const users = await usersService.getAll();
 
-    successHandler.OK(res, users.map(User.toResponse));
+    successHandler.OK(req, res, users.map(User.toResponse));
   };
 
 /**
@@ -29,18 +29,18 @@ class UserController {
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      errorHandler.badRequest(res, { message: 'UserId is not valid' });
+      errorHandler.badRequest(req, res, { message: 'UserId is not valid' });
       return
     }
 
     const user = await usersService.getOne(id);
 
     if (!user) {
-      errorHandler.notFound(res, { message: 'User not found' });
+      errorHandler.notFound(req, res, { message: 'User not found' });
       return
     }
 
-    successHandler.OK(res, User.toResponse(user));
+    successHandler.OK(req, res, User.toResponse(user));
   };
 
   /**
@@ -54,13 +54,13 @@ class UserController {
     const { name, login, password } = body;
 
     if (!name || !login || !password) {
-      errorHandler.badRequest(res, { message: 'Please, specify required fields: name, login, password' });
+      errorHandler.badRequest(req, res, { message: 'Please, specify required fields: name, login, password' }, body);
       return
     }
 
     const newUser = await usersService.createOne({ name, login, password });
 
-    successHandler.created(res, User.toResponse(newUser));
+    successHandler.created(req, res, User.toResponse(newUser), body);
   };
 
   /**
@@ -71,20 +71,21 @@ class UserController {
   updateOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
+    const body = await getBodyData(req, res) as IUserToCreate;
 
     if (!isIdValid) {
-      errorHandler.badRequest(res, { message: 'UserId is not valid' });
+      errorHandler.badRequest(req, res, { message: 'UserId is not valid' }, body);
       return
     }
 
     const user = await usersService.getOne(id);
 
     if (!user) {
-      errorHandler.notFound(res, { message: 'User not found' });
+      errorHandler.notFound(req, res, { message: 'User not found' }, body);
       return
     }
 
-    const { name, login, password } = await getBodyData(req, res) as IUserToCreate;
+    const { name, login, password } = body;
 
     const newUserData = {
       name: name || user.name,
@@ -94,7 +95,7 @@ class UserController {
 
     const updatedUser = await usersService.updateOne(id, newUserData);
 
-    successHandler.OK(res, User.toResponse(updatedUser));
+    successHandler.OK(req, res, User.toResponse(updatedUser), body);
   };
 
   /**
@@ -107,14 +108,14 @@ class UserController {
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      errorHandler.badRequest(res, { message: 'UserId is not valid' });
+      errorHandler.badRequest(req, res, { message: 'UserId is not valid' });
       return;
     }
 
     const user = await usersService.getOne(id);
 
     if (!user) {
-      errorHandler.notFound(res, { message: 'User not found' });
+      errorHandler.notFound(req, res, { message: 'User not found' });
       return;
     }
 
@@ -123,7 +124,7 @@ class UserController {
     // When somebody DELETEs User, all Tasks where User is assignee should be updated to put userId = null.
     await TaskServiceInstance.updateMany({ key: 'userId', value: id }, { userId: null });
 
-    successHandler.noContent(res, { message: 'The user has been deleted' });
+    successHandler.noContent(req, res, { message: 'The user has been deleted' });
   };
 }
 

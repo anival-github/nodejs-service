@@ -1,19 +1,8 @@
 import { HTTP_REQUEST, HTTP_RESPONCE } from "../../types";
-// const router = require('express').Router();
-// const User = require('./user.model');
-// const usersService = require('./user.service');
-
-// router.route('/').get(async (req, res) => {
-//   const users = await usersService.getAll();
-//   // map user fields to exclude secret fields like "password"
-//   res.json(users.map(User.toResponse));
-// });
-
-// module.exports = router;
-
 import userController from './user.controller';
-import HTTP_METHODS from '../../common/httpMethods';
+import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
+import ErrorHandler from "../../common/errorHandler";
 
 /**
  * Handle user related requests
@@ -45,6 +34,7 @@ const userRouter = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
       break;
 
     default:
+      ErrorHandler.notFound(req, res, { message: 'Route not found' });
       break;
   }
 };

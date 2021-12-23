@@ -1,4 +1,5 @@
 import { validate } from 'uuid';
+import { ITaskToCreate } from './task.model';
 import TaskServiceInstance from './task.service';
 import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
 import { getBodyData, extractFirstId, extractSecondId } from '../../utils/Utils';
@@ -19,7 +20,7 @@ class TaskController {
   async getAll(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const collection = await TaskServiceInstance.getAll();
 
-    SuccessHandler.OK(res, collection);
+    SuccessHandler.OK(req, res, collection);
   }
 
   /**
@@ -32,18 +33,18 @@ class TaskController {
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      ErrorHandler.badRequest(req, res, { message: `${this.itemIdName} is not valid` });
       return;
     }
 
     const item = await TaskServiceInstance.getOne(id);
 
     if (!item) {
-      ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      ErrorHandler.notFound(req, res, { message: `${this.itemName} not found` });
       return;
     }
 
-    SuccessHandler.OK(res, item);
+    SuccessHandler.OK(req, res, item);
   }
 
   /**
@@ -52,15 +53,20 @@ class TaskController {
  * @param res - http response class ServerResponse
  */
   async createOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
-    const validatedData = await getValidatedData(req, res);
+    const body = await getBodyData(req, res) as ITaskToCreate;
 
-    if (!validatedData) {
+    const boardIdFromUrl = extractFirstId(req);
+    const validationResult = getValidatedData(body, boardIdFromUrl);
+
+    if (!validationResult.valid || !validationResult.data) {
+      ErrorHandler.badRequest(req, res, { message: validationResult.message }, body);
       return;
     }
 
+    const validatedData = validationResult.data as ITaskToCreate;
     const newItem = await TaskServiceInstance.createOne(validatedData);
 
-    SuccessHandler.created(res, newItem);
+    SuccessHandler.created(req, res, newItem);
   }
 
   /**
@@ -71,29 +77,24 @@ class TaskController {
   async updateOne (req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractSecondId(req);
     const isIdValid = validate(id);
+    const bodyData = await getBodyData(req, res);
 
     if (!isIdValid) {
-      ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      ErrorHandler.badRequest(req, res, { message: `${this.itemIdName} is not valid` }, bodyData);
       return;
     }
 
     const item = await TaskServiceInstance.getOne(id);
 
     if (!item) {
-      ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      ErrorHandler.notFound(req, res, { message: `${this.itemName} not found` }, bodyData);
       return;
     }
 
-    const bodyData = await getBodyData(req, res);
-
-    const newDataForItem = {
-      ...item,
-      ...bodyData,
-    };
-
+    const newDataForItem = { ...item, ...bodyData };
     const updatedItem = await TaskServiceInstance.updateOne(id, newDataForItem);
 
-    SuccessHandler.OK(res, updatedItem);
+    SuccessHandler.OK(req, res, updatedItem, bodyData);
   }
 
   /**
@@ -106,19 +107,19 @@ class TaskController {
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      ErrorHandler.badRequest(req, res, { message: `${this.itemIdName} is not valid` });
       return;
     }
 
     const item = await TaskServiceInstance.getOne(id);
 
     if (!item) {
-      ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      ErrorHandler.notFound(req, res, { message: `${this.itemName} not found` });
       return;
     }
 
     await TaskServiceInstance.deleteOne(id);
-    SuccessHandler.noContent(res, { message: `The ${this.itemName} has been deleted` });
+    SuccessHandler.noContent(req, res, { message: `The ${this.itemName} has been deleted` });
   }
 
   /**
@@ -131,18 +132,18 @@ class TaskController {
       const isIdValid = validate(boardId);
 
       if (!isIdValid) {
-        ErrorHandler.badRequest(res, { message: 'BoardId is not valid' });
+        ErrorHandler.badRequest(req, res, { message: 'BoardId is not valid' });
         return;
       }
 
       const items = await TaskServiceInstance.search({ key: 'boardId', value: boardId });
 
       if (!items || (items && !items.length)) {
-        ErrorHandler.notFound(res, { message: `${this.itemName}s not found` });
+        ErrorHandler.notFound(req, res, { message: `${this.itemName}s not found` });
         return;
       }
 
-      SuccessHandler.OK(res, items);
+      SuccessHandler.OK(req, res, items);
   }
 }
 

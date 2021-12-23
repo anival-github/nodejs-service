@@ -6,13 +6,14 @@ import SuccessHandler from '../../common/successHandler';
 import BoardServiceInstance from './board.service';
 import { getValidatedDataForBoard } from './board.validatior';
 import TaskService from '../tasks/task.service';
+import { IBoardToCreate } from './board.model';
 
 class BoardController {
   itemIdName = 'BoardId';
 
   itemName = 'Board';
 
-  /**
+/**
  * Handle get all request
  * @param req - http request class IncomingMessage
  * @param res - http response class ServerResponse
@@ -20,7 +21,7 @@ class BoardController {
   async getAll(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const collection = await BoardServiceInstance.getAll();
 
-    SuccessHandler.OK(res, collection);
+    SuccessHandler.OK(req, res, collection);
   }
 
   /**
@@ -33,18 +34,18 @@ class BoardController {
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      ErrorHandler.badRequest(req, res, { message: `${this.itemIdName} is not valid` });
       return;
     }
 
     const item = await BoardServiceInstance.getOne(id);
 
     if (!item) {
-      ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      ErrorHandler.notFound(req, res, { message: `${this.itemName} not found` });
       return;
     }
 
-    SuccessHandler.OK(res, item);
+    SuccessHandler.OK(req, res, item);
   }
 
   /**
@@ -53,15 +54,18 @@ class BoardController {
  * @param res - http response class ServerResponse
  */
   async createOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
-    const validatedData = await getValidatedDataForBoard(req, res);
+    const body = await getBodyData(req, res) as IBoardToCreate;
+    const validationResult = getValidatedDataForBoard(body);
 
-    if (!validatedData) {
+    if (!validationResult.valid || !validationResult.data) {
+      ErrorHandler.badRequest(req, res, { message: validationResult.message }, body);
       return;
     }
 
+    const validatedData = validationResult.data as IBoardToCreate;
     const newItem = await BoardServiceInstance.createOne(validatedData);
 
-    SuccessHandler.created(res, newItem);
+    SuccessHandler.created(req, res, newItem, body);
   }
 
   /**
@@ -72,29 +76,24 @@ class BoardController {
   async updateOne (req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
+    const bodyData = await getBodyData(req, res);
 
     if (!isIdValid) {
-      ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      ErrorHandler.badRequest(req, res, { message: `${this.itemIdName} is not valid` }, bodyData);
       return;
     }
 
     const item = await BoardServiceInstance.getOne(id);
 
     if (!item) {
-      ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      ErrorHandler.notFound(req, res, { message: `${this.itemName} not found` }, bodyData);
       return;
     }
 
-    const bodyData = await getBodyData(req, res);
-
-    const newDataForItem = {
-      ...item,
-      ...bodyData,
-    };
-
+    const newDataForItem = { ...item, ...bodyData };
     const updatedItem = await BoardServiceInstance.updateOne(id, newDataForItem);
 
-    SuccessHandler.OK(res, updatedItem);
+    SuccessHandler.OK(req, res, updatedItem, bodyData);
   }
 
   /**
@@ -107,14 +106,14 @@ class BoardController {
     const isIdValid = validate(id);
 
     if (!isIdValid) {
-      ErrorHandler.badRequest(res, { message: `${this.itemIdName} is not valid` });
+      ErrorHandler.badRequest(req, res, { message: `${this.itemIdName} is not valid` });
       return;
     }
 
     const item = await BoardServiceInstance.getOne(id);
 
     if (!item) {
-      ErrorHandler.notFound(res, { message: `${this.itemName} not found` });
+      ErrorHandler.notFound(req, res, { message: `${this.itemName} not found` });
       return;
     }
 
@@ -122,7 +121,7 @@ class BoardController {
 
     TaskService.deleteAllByBoardId(id);
 
-    SuccessHandler.noContent(res, { message: `The ${this.itemName} has been deleted` });
+    SuccessHandler.noContent(req, res, { message: `The ${this.itemName} has been deleted` });
   }
 }
 

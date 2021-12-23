@@ -1,10 +1,15 @@
-import User, { IUserToResponse } from "../resources/users/user.model";
-import { BoardClass } from "../resources/boards/board.model";
-import TaskClass from "../resources/tasks/task.model";
-import { HTTP_RESPONCE } from "../types";
+import { RequestBodyDataType } from "../utils/Utils";
+import { HTTP_REQUEST, HTTP_RESPONCE } from "../types";
+import HTTP_STATUS_CODES from "../constants/httpResponseStatusCodes";
+import { logHttpRequest } from './logger';
+import sendHttpResponse, { SuccessResultType } from "./sendHttpResponse";
 
-export type DataType = Record<string, string | number>;
-type HandlerFuncType = (res: HTTP_RESPONCE, data: TaskClass[] | BoardClass[] | BoardClass | TaskClass| User[]| IUserToResponse[] | IUserToResponse | DataType) => void;
+type HandlerFuncType = (
+  req: HTTP_REQUEST,
+  res: HTTP_RESPONCE,
+  result: SuccessResultType,
+  body?: RequestBodyDataType | "",
+) => void;
 
 export interface ISuccessHandler {
   OK: HandlerFuncType;
@@ -13,32 +18,46 @@ export interface ISuccessHandler {
 }
 
 const SuccessHandler: ISuccessHandler = {
-  /**
+/**
  * Send 200 status code response
+ * @param req - http request class IncomingMessage
  * @param res - http response class ServerResponse
- * @param data - data to send in response
+ * @param result - data to send in response
+ * @param body - parsed body from request if any
  */
-  OK: (res, data) => {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(data));
+  OK: (req, res, result, body = "") => {
+    const statusCode = HTTP_STATUS_CODES.OK;
+
+    logHttpRequest(req, statusCode, body);
+    sendHttpResponse(res, statusCode, result);
   },
-  /**
+
+/**
  * Send 201 status code response
+ * @param req - http request class IncomingMessage
  * @param res - http response class ServerResponse
- * @param data - data to send in response
+ * @param result - data to send in response
+ * @param body - parsed body from request if any
  */
-  created: (res, data) => {
-    res.writeHead(201, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(data));
+  created: (req, res, result, body = "") => {
+    const statusCode = HTTP_STATUS_CODES.CREATED;
+
+    logHttpRequest(req, statusCode, body);
+    sendHttpResponse(res, statusCode, result);
   },
-   /**
+
+/**
  * Send 204 status code response
+ * @param req - http request class IncomingMessage
  * @param res - http response class ServerResponse
- * @param data - data to send in response
+ * @param result - data to send in response
+ * @param body - parsed body from request if any
  */
-  noContent: (res, data) => {
-    res.writeHead(204, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(data));
+  noContent: (req, res, result, body = "") => {
+    const statusCode = HTTP_STATUS_CODES.NO_CONTENT;
+
+    logHttpRequest(req, statusCode, body);
+    sendHttpResponse(res, statusCode, result);
   },
 };
 

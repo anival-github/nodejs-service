@@ -1,10 +1,13 @@
-import errorHandlers from '../../common/errorHandler';
-import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
-import { getBodyData } from '../../utils/Utils';
 import Column from '../columns/column.model';
 import { IBoardToCreate } from './board.model';
 
-export type GetValidatedDataForBoardType = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => Promise<IBoardToCreate | null>;
+interface IValidationResult {
+  valid: boolean;
+  message: string;
+  data: IBoardToCreate | null,
+};
+
+export type GetValidatedDataForBoardType = (body: IBoardToCreate) => IValidationResult;
 
 /**
  * Validate board data from request
@@ -12,17 +15,15 @@ export type GetValidatedDataForBoardType = (req: HTTP_REQUEST, res: HTTP_RESPONC
  * @param res - http response class ServerResponse
  * @returns object represents board properties
  */
-export const getValidatedDataForBoard: GetValidatedDataForBoardType = async (req, res) => {
-  const body = await getBodyData(req, res) as IBoardToCreate;
-
-  const {
-    title,
-    columns,
-  } = body;
+export const getValidatedDataForBoard: GetValidatedDataForBoardType = (body) => {
+  const { title, columns } = body;
 
   if (!title || !columns || (columns && !columns.length)) {
-    errorHandlers.badRequest(res, { message: 'Please, specify required fields: title, columns' });
-    return null;
+    return {
+      valid: false,
+      message: 'Please, specify required fields: title, columns',
+      data: null,
+    };
   }
 
   const validatedColumns = [];
@@ -33,8 +34,11 @@ export const getValidatedDataForBoard: GetValidatedDataForBoardType = async (req
     const { title: columnTitle, order } = column;
 
     if ([columnTitle, order].some((elem) => typeof elem === 'undefined')) {
-      errorHandlers.badRequest(res, { message: 'Each column must contain title and order' });
-      return null;
+      return {
+        valid: false,
+        message: 'Each column must contain title and order',
+        data: null,
+      };;
     }
 
     const validatedColumn = new Column({ title: columnTitle, order });
@@ -42,7 +46,11 @@ export const getValidatedDataForBoard: GetValidatedDataForBoardType = async (req
   }
 
   return {
-    title,
-    columns: validatedColumns,
+    valid: true,
+    message: '',
+    data: {
+      title,
+      columns: validatedColumns,
+    },
   };
 };

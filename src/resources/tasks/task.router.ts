@@ -1,8 +1,8 @@
 import taskControllerInstance from './task.controller';
-import HTTP_METHODS from '../../common/httpMethods';
+import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
-import errorHandlers from '../../common/errorHandler';
 import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
+import ErrorHandler from '../../common/errorHandler';
 
 /**
  * Handle task related requests
@@ -38,7 +38,7 @@ const tasksRouter = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
       break;
 
     default:
-      errorHandlers.notFound(res, { message: 'Route not found' });
+      ErrorHandler.notFound(req, res, { message: 'Route not found' });
       break;
   }
 };
