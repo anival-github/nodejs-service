@@ -1,5 +1,5 @@
 import { validate } from 'uuid';
-import { HTTP_RESPONCE , HTTP_REQUEST } from "../../types";
+import { HTTP_RESPONCE, HTTP_REQUEST } from "../../types/httpTypes";
 import User, { IUserToCreate } from './user.model';
 import usersService from './user.service';
 import TaskServiceInstance from '../tasks/task.service';
@@ -8,22 +8,22 @@ import { getBodyData, extractFirstId } from '../../utils/Utils';
 import errorHandler from '../../common/errorHandler';
 
 class UserController {
-/**
- * Handle get all request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+  /**
+   * Handle get all request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   getAll = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const users = await usersService.getAll();
 
     successHandler.OK(req, res, users.map(User.toResponse));
   };
 
-/**
- * Handle get one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+  /**
+   * Handle get one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   getOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
@@ -44,10 +44,10 @@ class UserController {
   };
 
   /**
- * Handle create one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Handle create one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   createOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const body = await getBodyData(req, res) as IUserToCreate;
 
@@ -64,10 +64,10 @@ class UserController {
   };
 
   /**
- * Handle update one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Handle update one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   updateOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
@@ -99,10 +99,10 @@ class UserController {
   };
 
   /**
- * Handle delete one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Handle delete one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   deleteOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);

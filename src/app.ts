@@ -4,7 +4,7 @@ import userRouter from './resources/users/user.router';
 import boardsRouter from './resources/boards/board.router';
 import errorHandler from './common/errorHandler';
 import tasksRouter from './resources/tasks/task.router';
-import { HTTP_REQUEST, HTTP_RESPONCE } from './types';
+import { HTTP_REQUEST, HTTP_RESPONCE } from './types/httpTypes';
 import { getErrorMessage } from './utils/Utils';
 
 const app = http.createServer(

@@ -1,8 +1,8 @@
 import winston from 'winston';
-import { HTTP_REQUEST } from "../types";
+import { HTTP_REQUEST } from "../types/httpTypes";
 import config from "./config";
-import { RequestBodyDataType } from '../utils/Utils';
 import HTTP_STATUS_CODES from '../constants/httpResponseStatusCodes';
+import { RequestBodyDataType } from '../types/utilsTypes';
 
 interface ILoggerLevels {
   [key: string]: number;

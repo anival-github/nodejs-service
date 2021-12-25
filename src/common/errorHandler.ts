@@ -1,21 +1,7 @@
-import { RequestBodyDataType } from "../utils/Utils";
 import HTTP_STATUS_CODES from "../constants/httpResponseStatusCodes";
-import { HTTP_REQUEST, HTTP_RESPONCE } from "../types";
+import { IErrorHandler } from "../types/errorHandlerTypes";
 import { logHttpRequest } from './logger';
-import sendHttpResponse, { ErrorResponseResultType } from "./sendHttpResponse";
-
-type HandlerFuncType = (
-  req: HTTP_REQUEST,
-  res: HTTP_RESPONCE,
-  result: ErrorResponseResultType,
-  body?: RequestBodyDataType | "",
-) => void;
-
-export interface IErrorHandler {
-  badRequest: HandlerFuncType;
-  notFound: HandlerFuncType;
-  internalServerError: HandlerFuncType;
-}
+import sendHttpResponse from "./sendHttpResponse";
 
 const ErrorHandler: IErrorHandler = {
 /**

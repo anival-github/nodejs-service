@@ -1,4 +1,4 @@
-import { HTTP_REQUEST, HTTP_RESPONCE } from "../../types";
+import { HTTP_REQUEST, HTTP_RESPONCE } from "../../types/httpTypes";
 import userController from './user.controller';
 import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';

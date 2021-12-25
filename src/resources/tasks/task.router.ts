@@ -1,7 +1,7 @@
 import taskControllerInstance from './task.controller';
 import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
-import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
+import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types/httpTypes';
 import ErrorHandler from '../../common/errorHandler';
 
 /**

@@ -2,7 +2,7 @@ import User, { IUserToResponse } from "../resources/users/user.model";
 import { BoardClass } from "../resources/boards/board.model";
 import HTTP_STATUS_CODES from '../constants/httpResponseStatusCodes';
 import TaskClass from '../resources/tasks/task.model';
-import { HTTP_RESPONCE } from "../types";
+import { HTTP_RESPONCE } from "../types/httpTypes";
 
 export type SuccessResultType = Record<string, string | number>
     | TaskClass

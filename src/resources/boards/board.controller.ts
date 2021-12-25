@@ -1,5 +1,5 @@
 import { validate } from 'uuid';
-import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
+import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types/httpTypes';
 import { getBodyData, extractFirstId } from '../../utils/Utils';
 import ErrorHandler from '../../common/errorHandler';
 import SuccessHandler from '../../common/successHandler';
@@ -13,11 +13,11 @@ class BoardController {
 
   itemName = 'Board';
 
-/**
- * Handle get all request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+  /**
+   * Handle get all request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   async getAll(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const collection = await BoardServiceInstance.getAll();
 
@@ -25,10 +25,10 @@ class BoardController {
   }
 
   /**
- * Handle get one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Handle get one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   async getOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
@@ -49,10 +49,10 @@ class BoardController {
   }
 
   /**
- * Handle create one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Handle create one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   async createOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const body = await getBodyData(req, res) as IBoardToCreate;
     const validationResult = getValidatedDataForBoard(body);
@@ -69,11 +69,11 @@ class BoardController {
   }
 
   /**
- * Handle update one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
-  async updateOne (req: HTTP_REQUEST, res: HTTP_RESPONCE) {
+   * Handle update one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
+  async updateOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
     const bodyData = await getBodyData(req, res);
@@ -97,10 +97,10 @@ class BoardController {
   }
 
   /**
- * Handle delete one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Handle delete one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   public async deleteOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractFirstId(req);
     const isIdValid = validate(id);

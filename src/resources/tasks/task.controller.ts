@@ -1,7 +1,7 @@
 import { validate } from 'uuid';
 import { ITaskToCreate } from './task.model';
 import TaskServiceInstance from './task.service';
-import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
+import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types/httpTypes';
 import { getBodyData, extractFirstId, extractSecondId } from '../../utils/Utils';
 import ErrorHandler from '../../common/errorHandler';
 import SuccessHandler from '../../common/successHandler';
@@ -13,10 +13,10 @@ class TaskController {
   itemName = 'TaskClass';
 
   /**
- * Handle get all request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Handle get all request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   async getAll(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const collection = await TaskServiceInstance.getAll();
 
@@ -24,10 +24,10 @@ class TaskController {
   }
 
   /**
- * Handle get one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Handle get one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   async getOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractSecondId(req);
     const isIdValid = validate(id);
@@ -48,10 +48,10 @@ class TaskController {
   }
 
   /**
- * Handle create one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Handle create one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   async createOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const body = await getBodyData(req, res) as ITaskToCreate;
 
@@ -70,11 +70,11 @@ class TaskController {
   }
 
   /**
- * Handle update one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
-  async updateOne (req: HTTP_REQUEST, res: HTTP_RESPONCE) {
+   * Handle update one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
+  async updateOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractSecondId(req);
     const isIdValid = validate(id);
     const bodyData = await getBodyData(req, res);
@@ -98,10 +98,10 @@ class TaskController {
   }
 
   /**
- * Handle delete one request
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Handle delete one request
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   public async deleteOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
     const id = extractSecondId(req);
     const isIdValid = validate(id);
@@ -123,27 +123,27 @@ class TaskController {
   }
 
   /**
- * Get all tasks by board id
- * @param req - http request class IncomingMessage
- * @param res - http response class ServerResponse
- */
+   * Get all tasks by board id
+   * @param req - http request class IncomingMessage
+   * @param res - http response class ServerResponse
+   */
   async getAllByBoardId(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
-      const boardId = extractFirstId(req);
-      const isIdValid = validate(boardId);
+    const boardId = extractFirstId(req);
+    const isIdValid = validate(boardId);
 
-      if (!isIdValid) {
-        ErrorHandler.badRequest(req, res, { message: 'BoardId is not valid' });
-        return;
-      }
+    if (!isIdValid) {
+      ErrorHandler.badRequest(req, res, { message: 'BoardId is not valid' });
+      return;
+    }
 
-      const items = await TaskServiceInstance.search({ key: 'boardId', value: boardId });
+    const items = await TaskServiceInstance.search({ key: 'boardId', value: boardId });
 
-      if (!items || (items && !items.length)) {
-        ErrorHandler.notFound(req, res, { message: `${this.itemName}s not found` });
-        return;
-      }
+    if (!items || (items && !items.length)) {
+      ErrorHandler.notFound(req, res, { message: `${this.itemName}s not found` });
+      return;
+    }
 
-      SuccessHandler.OK(req, res, items);
+    SuccessHandler.OK(req, res, items);
   }
 }
 

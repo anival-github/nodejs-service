@@ -2,7 +2,7 @@ import BoardController from './board.controller';
 import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
 import errorHandlers from '../../common/errorHandler';
-import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types';
+import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types/httpTypes';
 
 /**
  * Handle board related requests

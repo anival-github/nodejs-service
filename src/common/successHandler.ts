@@ -1,21 +1,7 @@
-import { RequestBodyDataType } from "../utils/Utils";
-import { HTTP_REQUEST, HTTP_RESPONCE } from "../types";
 import HTTP_STATUS_CODES from "../constants/httpResponseStatusCodes";
 import { logHttpRequest } from './logger';
-import sendHttpResponse, { SuccessResultType } from "./sendHttpResponse";
-
-type HandlerFuncType = (
-  req: HTTP_REQUEST,
-  res: HTTP_RESPONCE,
-  result: SuccessResultType,
-  body?: RequestBodyDataType | "",
-) => void;
-
-export interface ISuccessHandler {
-  OK: HandlerFuncType;
-  created: HandlerFuncType;
-  noContent: HandlerFuncType;
-}
+import sendHttpResponse from "./sendHttpResponse";
+import { ISuccessHandler } from "../types/successHandlerTypes";
 
 const SuccessHandler: ISuccessHandler = {
 /**

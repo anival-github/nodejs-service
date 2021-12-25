@@ -1,7 +1,5 @@
-import { ITaskToCreate } from "../resources/tasks/task.model";
-import { IUserToCreate } from "../resources/users/user.model";
-import { IBoardToCreate } from "../resources/boards/board.model";
-import { HTTP_REQUEST, HTTP_RESPONCE } from "../types";
+import ErrorHandler from "../common/errorHandler";
+import { ExtractIdType, GetBodyDataType } from "../types/utilsTypes";
 
 /**
  * Returns error message
@@ -15,9 +13,6 @@ export const getErrorMessage = (error: unknown) => {
 
   return String(error)
 }
-
-export type RequestBodyDataType = IUserToCreate | ITaskToCreate | IBoardToCreate;
-export type GetBodyDataType = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => Promise<RequestBodyDataType>;
 
 /**
  * Returns parsed body
@@ -37,17 +32,13 @@ export const getBodyData: GetBodyDataType = (req, res) => new Promise((resolve) 
       try {
         resolve(JSON.parse(body));
       } catch (error) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: getErrorMessage(error) }));
+        ErrorHandler.internalServerError(req, res, { message: getErrorMessage(error) });
       }
     });
   } catch (error) {
-    res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ message: getErrorMessage(error) }));
+    ErrorHandler.internalServerError(req, res, { message: getErrorMessage(error) });
   }
 });
-
-export type ExtractIdType = (req: HTTP_REQUEST) => string;
 
 /**
  * Returns first id param from url
