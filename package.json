@@ -10,7 +10,7 @@
   "main": "src/server.ts",
   "scripts": {
     "start:build": "tsc -p . && node dist/server.js",
-    "start": "nodemon src/server.ts",
+    "start": "ts-node-dev src/server.ts",
     "lint": "eslint --ext .js,.ts --fix src/",
     "test": "cross-env DEBUG=rs:* jest --testMatch \"<rootDir>/test/e2e/test/*.test.js\" --noStackTrace --runInBand",
     "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace"
@@ -76,6 +76,7 @@
     "prettier": "2.4.1",
     "supertest": "6.1.6",
     "ts-node": "^10.4.0",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.4"
   }
 }
