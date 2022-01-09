@@ -13,6 +13,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       PGDATA: ${PGDATA}
     restart: always
+    networks:
+      - net
   app:
     image: anivaldocker/boardsapp
     build: .
@@ -28,5 +30,14 @@ services:
       - storage:/app/data
     links:
       - db
+    networks:
+      - net
 volumes:
   storage:
+networks:
+  net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.220.0/24
+
