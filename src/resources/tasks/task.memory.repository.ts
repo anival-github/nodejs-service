@@ -1,6 +1,16 @@
+import { TASKS_LOCAL_DB_PATH } from "../../constants/paths";
+import { getFromLocalDatabase, saveToLocalDatabase } from "../../utils/Utils";
 import TaskClass, { ITaskToCreate } from "./task.model";
 
 let tasks: TaskClass[] = [];
+
+const dataFromLocalDb = getFromLocalDatabase(TASKS_LOCAL_DB_PATH) as TaskClass[];
+
+if (dataFromLocalDb) {
+  tasks = dataFromLocalDb;
+}
+
+const updateLocalDb = () => saveToLocalDatabase(TASKS_LOCAL_DB_PATH, tasks);
 
 export class TasksRepo {
   /**
@@ -39,6 +49,8 @@ export class TasksRepo {
     const item = new TaskClass(newItem);
 
     tasks.push(item);
+    updateLocalDb();
+
     return item;
   }
 
@@ -48,6 +60,7 @@ export class TasksRepo {
    */
   async deleteOne(id: string) {
     tasks = tasks.filter((elem) => elem.id !== id);
+    updateLocalDb();
   }
 
   /**
@@ -57,6 +70,7 @@ export class TasksRepo {
   async deleteMany({ key, value }: { key: keyof TaskClass, value: string }) {
     const filteredCollection = tasks.filter((elem) => elem[key] !== value);
     tasks = filteredCollection;
+    updateLocalDb();
   }
 
   /**
@@ -69,6 +83,7 @@ export class TasksRepo {
     const itemIndex = tasks.findIndex((elem) => elem.id === id);
 
     tasks[itemIndex] = { ...tasks[itemIndex], ...itemData };
+    updateLocalDb();
 
     return tasks[itemIndex];
   }
@@ -92,6 +107,8 @@ export class TasksRepo {
 
       tasks[index] = newCollectionItem;
     }
+
+    updateLocalDb();
   }
 }
 

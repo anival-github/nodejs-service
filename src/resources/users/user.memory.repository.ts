@@ -1,6 +1,16 @@
+import { USERS_LOCAL_DB_PATH } from '../../constants/paths';
+import { getFromLocalDatabase, saveToLocalDatabase } from '../../utils/Utils';
 import User from './user.model';
 
 let users: User[] = [];
+
+const dataFromLocalDb = getFromLocalDatabase(USERS_LOCAL_DB_PATH) as User[];
+
+if (dataFromLocalDb) {
+  users = dataFromLocalDb;
+}
+
+const updateLocalDb = () => saveToLocalDatabase(USERS_LOCAL_DB_PATH, users);
 
 class UsersRepo {
   /**
@@ -29,6 +39,8 @@ class UsersRepo {
     const user = new User({ name, login, password });
 
     users.push(user);
+    updateLocalDb();
+
     return user;
   }
 
@@ -38,6 +50,7 @@ class UsersRepo {
  */
   deleteOne = async (id: string) => {
     users = users.filter((user) => user.id !== id);
+    updateLocalDb();
   };
 
    /**
@@ -50,6 +63,8 @@ class UsersRepo {
     const userIndex = users.findIndex((elem) => elem.id === id);
 
     users[userIndex] = { id, ...userData };
+
+    updateLocalDb();
 
     return users[userIndex];
   }

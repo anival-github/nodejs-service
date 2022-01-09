@@ -1,5 +1,7 @@
+import fs from 'fs';
 import ErrorHandler from "../common/errorHandler";
-import { ExtractIdType, GetBodyDataType } from "../types/utilsTypes";
+import logger from '../common/logger';
+import { ExtractIdType, GetBodyDataType, GetFromLocalDatabase, SaveToLocalDatabaseType } from "../types/utilsTypes";
 
 /**
  * Returns error message
@@ -61,3 +63,25 @@ export const extractSecondId: ExtractIdType = (req) => {
 
   return url.pathname.split('/')[4]
 };
+
+export const saveToLocalDatabase: SaveToLocalDatabaseType = (filePath, data) => {
+  const dataJSON = JSON.stringify(data);
+
+  fs.writeFile(filePath, dataJSON, null, (err) => {
+    if (err) {
+      logger.error('Error while saving data to json storage');
+    }
+  });
+}
+
+export const getFromLocalDatabase: GetFromLocalDatabase = (filePath) => {
+  try {
+    const rawData = fs.readFileSync(filePath);
+    const dataJSON = JSON.parse(rawData.toString());
+
+    return dataJSON;
+  } catch (error) {
+    logger.error('Error while getting data from json storage');
+    return [];
+  }
+}

@@ -6,6 +6,6 @@ app.listen(config.PORT, () => {
   console.log(`App is running on http://localhost:${config.PORT}`);
 });
 
-// For testing logging of uncaughtRejection and uncaughtException
-Promise.reject(Error('Oops!'));
-throw Error('Oops!');
+// Use for testing logging of uncaughtRejection and uncaughtException
+// Promise.reject(Error('Oops!'));
+// throw Error('Oops!');

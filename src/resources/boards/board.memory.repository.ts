@@ -1,6 +1,16 @@
+import { BOARDS_LOCAL_DB_PATH } from "../../constants/paths";
+import { getFromLocalDatabase, saveToLocalDatabase } from "../../utils/Utils";
 import { BoardClass, IBoardToCreate } from "./board.model";
 
-let boards: BoardClass[]  = [];
+let boards: BoardClass[] = [];
+
+const boardsFromLocalDb = getFromLocalDatabase(BOARDS_LOCAL_DB_PATH) as BoardClass[];
+
+if (boardsFromLocalDb) {
+  boards = boardsFromLocalDb;
+}
+
+const updateLocalDb = () => saveToLocalDatabase(BOARDS_LOCAL_DB_PATH, boards);
 
 class BoardsRepo {
   /**
@@ -39,6 +49,8 @@ class BoardsRepo {
     const item = new BoardClass(itemData);
 
     boards.push(item);
+    updateLocalDb();
+
     return item;
   }
 
@@ -48,6 +60,7 @@ class BoardsRepo {
  */
   async deleteOne(id: string) {
     boards = boards.filter((elem) => elem.id !== id);
+    updateLocalDb();
   }
 
   /**
@@ -57,6 +70,7 @@ class BoardsRepo {
   async deleteMany({ key, value }: { key: keyof BoardClass, value: string }) {
     const filteredCollection = boards.filter((elem) => elem[key] !== value);
     boards = filteredCollection;
+    updateLocalDb();
   }
 
   /**
@@ -69,6 +83,7 @@ class BoardsRepo {
     const itemIndex = boards.findIndex((elem) => elem.id === id);
 
     boards[itemIndex] = { ...boards[itemIndex], ...itemData };
+    updateLocalDb();
 
     return boards[itemIndex];
   }
@@ -90,6 +105,8 @@ class BoardsRepo {
         ...updates,
       };
     }
+
+    updateLocalDb();
   }
 }
 

@@ -17,6 +17,8 @@ class UserController {
     const users = await usersService.getAll();
 
     successHandler.OK(req, res, users.map(User.toResponse));
+    // Use for docker dev mode check
+    // successHandler.OK(req, res, []);
   };
 
   /**
