@@ -2,14 +2,14 @@ import BoardController from './board.controller';
 import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
 import errorHandlers from '../../common/errorHandler';
-import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types/httpTypes';
+import { RouterType } from '../../types/routerTypes';
 
 /**
  * Handle board related requests
  * @param req - http request class IncomingMessage
  * @param res - http response class ServerResponse
  */
-const boardsRouter = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
+const boardsRouter: RouterType = (req, res) => {
   const url = new URL(req.url || '', `http://${req.headers.host}`);
 
   switch (true) {

@@ -1,7 +1,7 @@
-import User, { IUserToResponse } from "../resources/users/user.model";
-import { BoardClass } from "../resources/boards/board.model";
+import User, { UserToResponseType } from "../entity/user.entity";
+import { BoardClass } from "../entity/board.entity";
 import HTTP_STATUS_CODES from '../constants/httpResponseStatusCodes';
-import TaskClass from '../resources/tasks/task.model';
+import TaskClass from '../entity/task.entity';
 import { HTTP_RESPONCE } from "../types/httpTypes";
 
 export type SuccessResultType = Record<string, string | number>
@@ -10,8 +10,8 @@ export type SuccessResultType = Record<string, string | number>
     | BoardClass
     | BoardClass[]
     | User[]
-    | IUserToResponse
-    | IUserToResponse[];
+    | UserToResponseType
+    | UserToResponseType[];
 
 export type ErrorResponseResultType = Record<string, string | number>;
 type ResultType = SuccessResultType | ErrorResponseResultType;

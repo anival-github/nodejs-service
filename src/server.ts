@@ -1,11 +1,22 @@
-import config from './common/config';
-import app from './app';
-import './common/logger';
+// import { connectToDb } from './common/db';
+// import config from './common/config';
+// import app from './app';
 
-app.listen(config.PORT, () => {
-  console.log(`App is running on http://localhost:${config.PORT}`);
-});
+// const start = async () => {
+//   const connection = await connectToDb();
 
-// Use for testing logging of uncaughtRejection and uncaughtException
-// Promise.reject(Error('Oops!'));
-// throw Error('Oops!');
+//   if (!connection) {
+//     process.exit(0);
+//   }
+
+//   app.listen(config.PORT, () => {
+//     console.log(`App is running on http://localhost:${config.PORT}`);
+//   });
+// }
+
+// start();
+
+
+// // Use for testing logging of uncaughtRejection and uncaughtException
+// // Promise.reject(Error('Oops!'));
+// // throw Error('Oops!');

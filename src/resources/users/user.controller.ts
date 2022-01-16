@@ -1,11 +1,11 @@
 import { validate } from 'uuid';
-import { HTTP_RESPONCE, HTTP_REQUEST } from "../../types/httpTypes";
-import User, { IUserToCreate } from './user.model';
+import User, { UserDtoType } from '../../entity/user.entity';
 import usersService from './user.service';
 import TaskServiceInstance from '../tasks/task.service';
 import successHandler from '../../common/successHandler';
 import { getBodyData, extractFirstId } from '../../utils/Utils';
 import errorHandler from '../../common/errorHandler';
+import { ControllerType } from '../../types/controllerTypes';
 
 class UserController {
   /**
@@ -13,7 +13,7 @@ class UserController {
    * @param req - http request class IncomingMessage
    * @param res - http response class ServerResponse
    */
-  getAll = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
+  getAll: ControllerType = async (req, res) => {
     const users = await usersService.getAll();
 
     successHandler.OK(req, res, users.map(User.toResponse));
@@ -26,7 +26,7 @@ class UserController {
    * @param req - http request class IncomingMessage
    * @param res - http response class ServerResponse
    */
-  getOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
+  getOne: ControllerType = async (req, res) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
 
@@ -50,8 +50,8 @@ class UserController {
    * @param req - http request class IncomingMessage
    * @param res - http response class ServerResponse
    */
-  createOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
-    const body = await getBodyData(req, res) as IUserToCreate;
+  createOne: ControllerType = async (req, res) => {
+    const body = await getBodyData(req, res) as UserDtoType;
 
     const { name, login, password } = body;
 
@@ -60,9 +60,11 @@ class UserController {
       return
     }
 
-    const newUser = await usersService.createOne({ name, login, password });
+    const newUser = await usersService.createOne({ name, login, password }, );
 
-    successHandler.created(req, res, User.toResponse(newUser), body);
+    if (newUser) {
+      successHandler.created(req, res, User.toResponse(newUser), body);
+    }
   };
 
   /**
@@ -70,10 +72,10 @@ class UserController {
    * @param req - http request class IncomingMessage
    * @param res - http response class ServerResponse
    */
-  updateOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
+  updateOne: ControllerType = async (req, res) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
-    const body = await getBodyData(req, res) as IUserToCreate;
+    const body = await getBodyData(req, res) as UserDtoType;
 
     if (!isIdValid) {
       errorHandler.badRequest(req, res, { message: 'UserId is not valid' }, body);
@@ -95,7 +97,7 @@ class UserController {
       password: password || user.password,
     };
 
-    const updatedUser = await usersService.updateOne(id, newUserData);
+    const updatedUser = await usersService.updateOne(id, newUserData) as User;
 
     successHandler.OK(req, res, User.toResponse(updatedUser), body);
   };
@@ -105,7 +107,7 @@ class UserController {
    * @param req - http request class IncomingMessage
    * @param res - http response class ServerResponse
    */
-  deleteOne = async (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
+  deleteOne: ControllerType = async (req, res) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
 

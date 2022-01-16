@@ -1,15 +1,15 @@
 import taskControllerInstance from './task.controller';
 import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
-import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types/httpTypes';
 import ErrorHandler from '../../common/errorHandler';
+import { RouterType } from '../../types/routerTypes';
 
 /**
  * Handle task related requests
  * @param req - http request class IncomingMessage
  * @param res - http response class ServerResponse
  */
-const tasksRouter = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
+const tasksRouter: RouterType = (req, res) => {
   const url = new URL(req.url || '', `http://${req.headers.host}`);
 
   switch (true) {

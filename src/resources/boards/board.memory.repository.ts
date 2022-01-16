@@ -1,112 +1,120 @@
-import { BOARDS_LOCAL_DB_PATH } from "../../constants/paths";
-import { getFromLocalDatabase, saveToLocalDatabase } from "../../utils/Utils";
-import { BoardClass, IBoardToCreate } from "./board.model";
-
-let boards: BoardClass[] = [];
-
-const boardsFromLocalDb = getFromLocalDatabase(BOARDS_LOCAL_DB_PATH) as BoardClass[];
-
-if (boardsFromLocalDb) {
-  boards = boardsFromLocalDb;
-}
-
-const updateLocalDb = () => saveToLocalDatabase(BOARDS_LOCAL_DB_PATH, boards);
+import { Equal, getRepository } from "typeorm";
+import { BoardClass, BoardDtoType } from "../../entity/board.entity";
 
 class BoardsRepo {
   /**
- * Get all boards
- * @returns \{Promise\} Promise object represents collection of boards
- */
+   * Get all boards
+   * @returns \{Promise\} Promise object represents collection of boards
+   */
   async getAll() {
+    const boardRepository = getRepository(BoardClass);
+    const boards = await boardRepository.find();
+
     return boards;
   }
 
   /**
- * Get all filtered boards
- * @param filter - object with key to search and value to compare
- * @returns \{Promise\} Promise objects represents all boards corresponding to the filter
- */
+   * Get all filtered boards
+   * @param filter - object with key to search and value to compare
+   * @returns \{Promise\} Promise objects represents all boards corresponding to the filter
+   */
   async search({ key, value }: { key: keyof BoardClass, value: string }) {
-    const filteredCollection = boards.filter((elem: BoardClass) => elem[key] === value);
+    const boardRepository = getRepository(BoardClass);
+
+    const filteredCollection = await boardRepository.find({ [key]: Equal(value) });
+
     return filteredCollection;
   }
 
   /**
- * Get one board by id
- * @param id - board id string
- * @returns \{Promise\} Promise object represents board with a passed id
- */
+   * Get one board by id
+   * @param id - board id string
+   * @returns \{Promise\} Promise object represents board with a passed id
+   */
   async getOne(id: string) {
-    return boards.find((elem) => elem.id === id);
+    const boardRepository = getRepository(BoardClass);
+    const board = await boardRepository.findOne(id);
+
+    return board;
   }
 
   /**
- * Create one board
- * @param itemData - object with board parameters;
- * @returns \{Promise\} Promise object represents newly create board
- */
-  async createOne(itemData: IBoardToCreate) {
+   * Create one board
+   * @param itemData - object with board parameters;
+   * @returns \{Promise\} Promise object represents newly create board
+   */
+  async createOne(itemData: BoardDtoType) {
+    const boardRepository = getRepository(BoardClass);
     const item = new BoardClass(itemData);
 
-    boards.push(item);
-    updateLocalDb();
+    await boardRepository.save(item);
 
     return item;
   }
 
   /**
- * Delete board by id
- * @param id - board id string
- */
+   * Delete board by id
+   * @param id - board id string
+   */
   async deleteOne(id: string) {
-    boards = boards.filter((elem) => elem.id !== id);
-    updateLocalDb();
+    const boardRepository = getRepository(BoardClass);
+
+    await boardRepository.delete({ id })
   }
 
   /**
- * Delete boards by filter
- * @param filter - object with key to search and value to compare
- */
+   * Delete boards by filter
+   * @param filter - object with key to search and value to compare
+   */
   async deleteMany({ key, value }: { key: keyof BoardClass, value: string }) {
-    const filteredCollection = boards.filter((elem) => elem[key] !== value);
-    boards = filteredCollection;
-    updateLocalDb();
+    const boardRepository = getRepository(BoardClass);
+
+    await boardRepository.delete({ [key]: Equal(value) });
   }
 
   /**
- * Update board by id
- * @param id - board id string
- * @param itemData - data to update a particular board
- * @returns \{Promise\} Promise object represents updated board
- */
-  async updateOne(id: string, itemData: IBoardToCreate) {
-    const itemIndex = boards.findIndex((elem) => elem.id === id);
+   * Update board by id
+   * @param id - board id string
+   * @param itemData - data to update a particular board
+   * @returns \{Promise\} Promise object represents updated board
+   */
+  async updateOne(id: string, itemData: BoardDtoType) {
+    const boardRepository = getRepository(BoardClass);
+    const boardToUpdate = await boardRepository.findOne(id);
 
-    boards[itemIndex] = { ...boards[itemIndex], ...itemData };
-    updateLocalDb();
-
-    return boards[itemIndex];
-  }
-
-  /**
- * Update many boards found using filter
- * @param filter - object with key to search and value to compare
- * @param updates - data to update each board
- */
-  async updateMany(filter: { key: keyof BoardClass, value: string }, updates: Partial<BoardClass>) {
-    const filteredItems = boards.filter((elem: BoardClass) => elem[filter.key] === filter.value);
-    const filteredItemsIndexes = filteredItems.map((elem) => boards.findIndex((collectionItem) => collectionItem.id === elem.id));
-
-    for (let i = 0; i < filteredItemsIndexes.length; i += 1) {
-      const index = filteredItemsIndexes[i];
-
-      boards[index] = {
-        ...boards[index],
-        ...updates,
-      };
+    if (!boardToUpdate) {
+      return null;
     }
 
-    updateLocalDb();
+    const updatedBoard = {
+      ...boardToUpdate,
+      title: itemData.title,
+      columns: JSON.stringify(itemData.columns),
+    };
+    await boardRepository.save(updatedBoard);
+
+    return updatedBoard;
+  }
+
+  /**
+   * Update many boards found using filter
+   * @param filter - object with key to search and value to compare
+   * @param updates - data to update each board
+   */
+  async updateMany({ key, value }: { key: keyof BoardClass, value: string }, updates: Partial<BoardClass>) {
+    const boardRepository = getRepository(BoardClass);
+    const filteredItems = await boardRepository.find({ [key]: Equal(value) });
+
+    const promises = filteredItems.map((boardToUpdate: BoardClass) => {
+      const updatedBoard = {
+        ...boardToUpdate,
+        ...updates,
+      };
+
+      return boardRepository.save(updatedBoard);
+    })
+
+    await Promise.all(promises);
   }
 }
 

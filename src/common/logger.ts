@@ -35,11 +35,17 @@ const logger = winston.createLogger({
       handleRejections: true,
       handleExceptions: true
     }),
+    new winston.transports.Console({
+      level: 'error',
+      handleRejections: true,
+      handleExceptions: true
+    }),
+    new winston.transports.Console(),
     new winston.transports.File({
       filename: 'data/logs/combined.log',
     }),
   ],
-  exitOnError:	false,
+  exitOnError:	true,
 });
 
 let isLogLevelInfoLogged = false;

@@ -1,15 +1,15 @@
-import { HTTP_REQUEST, HTTP_RESPONCE } from "../../types/httpTypes";
 import userController from './user.controller';
 import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
 import ErrorHandler from "../../common/errorHandler";
+import { RouterType } from "../../types/routerTypes";
 
 /**
  * Handle user related requests
  * @param req - http request class IncomingMessage
  * @param res - http response class ServerResponse
  */
-const userRouter = (req: HTTP_REQUEST, res: HTTP_RESPONCE) => {
+const userRouter: RouterType = (req, res) => {
   const url = new URL(req.url || '', `http://${req.headers.host}`);
 
   switch (true) {

@@ -1,5 +1,5 @@
 import usersRepo from './user.memory.repository';
-import { IUserToCreate } from './user.model';
+import { UserDtoType } from '../../entity/user.entity';
 
 class UserService {
   /**
@@ -20,7 +20,7 @@ class UserService {
  * @param user - object with name: string, login: string, password: string;
  * @returns \{Promise\} Promise object represents newly create user
  */
-  createOne = (user: IUserToCreate) => usersRepo.createOne(user);
+  createOne = (user: UserDtoType) => usersRepo.createOne(user);
 
 
   /**
@@ -37,7 +37,7 @@ class UserService {
  * @param newUserData - data to update a particular user
  * @returns \{Promise\} Promise object represents updated user
  */
-  updateOne = (id: string, newUserData: { name: string; login: string; password: string }) => usersRepo.updateOne(id, newUserData);
+  updateOne = (id: string, newUserData: UserDtoType) => usersRepo.updateOne(id, newUserData);
 }
 
 export default new UserService();

@@ -1,23 +1,17 @@
-import { USERS_LOCAL_DB_PATH } from '../../constants/paths';
-import { getFromLocalDatabase, saveToLocalDatabase } from '../../utils/Utils';
-import User from './user.model';
-
-let users: User[] = [];
-
-const dataFromLocalDb = getFromLocalDatabase(USERS_LOCAL_DB_PATH) as User[];
-
-if (dataFromLocalDb) {
-  users = dataFromLocalDb;
-}
-
-const updateLocalDb = () => saveToLocalDatabase(USERS_LOCAL_DB_PATH, users);
+import { getRepository } from "typeorm";
+import User, { UserDtoType } from '../../entity/user.entity';
+import logger from '../../common/logger';
 
 class UsersRepo {
   /**
- * Get all users
- * @returns \{Promise\} Promise object represents collection of users
- */
-  getAll = async () => users;
+   * Get all users
+   * @returns \{Promise\} Promise object represents collection of users
+   */
+  getAll = async () => {
+    const userRepository = getRepository(User);
+    const users = await userRepository.find();
+    return users;
+  };
 
   /**
  * Get one user by id
@@ -25,7 +19,8 @@ class UsersRepo {
  * @returns \{Promise\} Promise object represents user with a passed id
  */
   getOne = async (id: string) => {
-    const user = users.find((elem) => elem.id === id);
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne(id);
 
     return user;
   }
@@ -36,12 +31,19 @@ class UsersRepo {
  * @returns \{Promise\} Promise object represents newly create user
  */
   createOne = async ({ name, login, password }: {name: string; login: string; password: string }) => {
-    const user = new User({ name, login, password });
+    try {
+      const userRepository = getRepository(User);
+      const user = new User({ name, login, password });
+      const result = await userRepository.save(user);
 
-    users.push(user);
-    updateLocalDb();
+      console.log(result);
 
-    return user;
+      return user;
+    } catch (error) {
+      console.log(error);
+      logger.error('Error while saving user to db', {error});
+      return null;
+    }
   }
 
     /**
@@ -49,8 +51,8 @@ class UsersRepo {
  * @param id - user id string
  */
   deleteOne = async (id: string) => {
-    users = users.filter((user) => user.id !== id);
-    updateLocalDb();
+    const userRepository = getRepository(User);
+    await userRepository.delete({ id });
   };
 
    /**
@@ -59,14 +61,15 @@ class UsersRepo {
  * @param userData - data to update a particular user
  * @returns \{Promise\} Promise object represents updated user
  */
-  updateOne = async (id: string, userData: { name: string; login: string; password: string }) => {
-    const userIndex = users.findIndex((elem) => elem.id === id);
+  updateOne = async (id: string, userData: UserDtoType) => {
+    const userRepository = getRepository(User);
+    const userToUpdate = await userRepository.findOne(id);
 
-    users[userIndex] = { id, ...userData };
+    const updatedUser = { ...userToUpdate, ...userData };
 
-    updateLocalDb();
+    await userRepository.save(updatedUser);
 
-    return users[userIndex];
+    return updatedUser;
   }
 }
 

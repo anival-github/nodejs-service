@@ -1,5 +1,5 @@
 import { validate } from 'uuid';
-import { ITaskToCreate } from './task.model';
+import { TaskDtoType } from '../../entity/task.entity';
 import TaskServiceInstance from './task.service';
 import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types/httpTypes';
 import { getBodyData, extractFirstId, extractSecondId } from '../../utils/Utils';
@@ -53,7 +53,7 @@ class TaskController {
    * @param res - http response class ServerResponse
    */
   async createOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
-    const body = await getBodyData(req, res) as ITaskToCreate;
+    const body = await getBodyData(req, res) as TaskDtoType;
 
     const boardIdFromUrl = extractFirstId(req);
     const validationResult = getValidatedData(body, boardIdFromUrl);
@@ -63,7 +63,7 @@ class TaskController {
       return;
     }
 
-    const validatedData = validationResult.data as ITaskToCreate;
+    const validatedData = validationResult.data as TaskDtoType;
     const newItem = await TaskServiceInstance.createOne(validatedData);
 
     SuccessHandler.created(req, res, newItem);

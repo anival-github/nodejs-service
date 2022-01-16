@@ -1,12 +1,12 @@
 import { validate } from 'uuid';
-import { HTTP_REQUEST, HTTP_RESPONCE } from '../../types/httpTypes';
 import { getBodyData, extractFirstId } from '../../utils/Utils';
 import ErrorHandler from '../../common/errorHandler';
 import SuccessHandler from '../../common/successHandler';
 import BoardServiceInstance from './board.service';
 import { getValidatedDataForBoard } from './board.validatior';
 import TaskService from '../tasks/task.service';
-import { IBoardToCreate } from './board.model';
+import { BoardDtoType } from '../../entity/board.entity';
+import { ControllerType } from '../../types/controllerTypes';
 
 class BoardController {
   itemIdName = 'BoardId';
@@ -18,7 +18,7 @@ class BoardController {
    * @param req - http request class IncomingMessage
    * @param res - http response class ServerResponse
    */
-  async getAll(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
+  getAll: ControllerType = async (req, res) => {
     const collection = await BoardServiceInstance.getAll();
 
     SuccessHandler.OK(req, res, collection);
@@ -29,7 +29,7 @@ class BoardController {
    * @param req - http request class IncomingMessage
    * @param res - http response class ServerResponse
    */
-  async getOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
+  getOne: ControllerType = async (req, res) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
 
@@ -53,8 +53,8 @@ class BoardController {
    * @param req - http request class IncomingMessage
    * @param res - http response class ServerResponse
    */
-  async createOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
-    const body = await getBodyData(req, res) as IBoardToCreate;
+  createOne: ControllerType = async (req, res) => {
+    const body = await getBodyData(req, res) as BoardDtoType;
     const validationResult = getValidatedDataForBoard(body);
 
     if (!validationResult.valid || !validationResult.data) {
@@ -62,7 +62,7 @@ class BoardController {
       return;
     }
 
-    const validatedData = validationResult.data as IBoardToCreate;
+    const validatedData = validationResult.data as BoardDtoType;
     const newItem = await BoardServiceInstance.createOne(validatedData);
 
     SuccessHandler.created(req, res, newItem, body);
@@ -73,25 +73,22 @@ class BoardController {
    * @param req - http request class IncomingMessage
    * @param res - http response class ServerResponse
    */
-  async updateOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
+  updateOne: ControllerType = async (req, res) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
-    const bodyData = await getBodyData(req, res);
+    const bodyData = await getBodyData(req, res) as BoardDtoType;
 
     if (!isIdValid) {
       ErrorHandler.badRequest(req, res, { message: `${this.itemIdName} is not valid` }, bodyData);
       return;
     }
 
-    const item = await BoardServiceInstance.getOne(id);
+    const updatedItem = await BoardServiceInstance.updateOne(id, bodyData);
 
-    if (!item) {
+    if (!updatedItem) {
       ErrorHandler.notFound(req, res, { message: `${this.itemName} not found` }, bodyData);
       return;
     }
-
-    const newDataForItem = { ...item, ...bodyData };
-    const updatedItem = await BoardServiceInstance.updateOne(id, newDataForItem);
 
     SuccessHandler.OK(req, res, updatedItem, bodyData);
   }
@@ -101,7 +98,7 @@ class BoardController {
    * @param req - http request class IncomingMessage
    * @param res - http response class ServerResponse
    */
-  public async deleteOne(req: HTTP_REQUEST, res: HTTP_RESPONCE) {
+  deleteOne: ControllerType = async (req, res) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
 

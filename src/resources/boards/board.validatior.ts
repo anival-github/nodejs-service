@@ -1,13 +1,13 @@
-import Column from '../columns/column.model';
-import { IBoardToCreate } from './board.model';
+import ColumnClass from '../../entity/column.entity';
+import { BoardDtoType } from '../../entity/board.entity';
 
 interface IValidationResult {
   valid: boolean;
   message: string;
-  data: IBoardToCreate | null,
+  data: BoardDtoType | null,
 };
 
-export type GetValidatedDataForBoardType = (body: IBoardToCreate) => IValidationResult;
+export type GetValidatedDataForBoardType = (body: BoardDtoType) => IValidationResult;
 
 /**
  * Validate board data from request
@@ -41,7 +41,7 @@ export const getValidatedDataForBoard: GetValidatedDataForBoardType = (body) => 
       };;
     }
 
-    const validatedColumn = new Column({ title: columnTitle, order });
+    const validatedColumn = new ColumnClass({ title: columnTitle, order });
     validatedColumns.push(validatedColumn);
   }
 

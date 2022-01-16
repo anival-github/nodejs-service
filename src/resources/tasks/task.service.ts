@@ -1,5 +1,5 @@
 import taskMemoryRepository from "./task.memory.repository";
-import TaskClass, { ITaskToCreate } from "./task.model";
+import TaskClass, { TaskDtoType } from "../../entity/task.entity";
 
 class TaskService {
   /**
@@ -33,7 +33,7 @@ class TaskService {
    * @param newItem - object with task parameters;
    * @returns \{Promise\} Promise object represents newly create task
    */
-  createOne(newItem: ITaskToCreate) {
+  createOne(newItem: TaskDtoType) {
     return taskMemoryRepository.createOne(newItem);
   }
 

@@ -1,13 +1,13 @@
-import { ITaskToCreate } from './task.model';
+import { TaskDtoType } from '../../entity/task.entity';
 
 interface IValidationResult {
   valid: boolean,
   message: string,
-  data: ITaskToCreate | null,
+  data: TaskDtoType | null,
 }
 
 export type GetValidatedDataType = (
-  body: ITaskToCreate,
+  body: TaskDtoType,
   boardIdFromUrl: string,
 ) => IValidationResult;
 

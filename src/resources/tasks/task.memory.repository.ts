@@ -1,16 +1,5 @@
-import { TASKS_LOCAL_DB_PATH } from "../../constants/paths";
-import { getFromLocalDatabase, saveToLocalDatabase } from "../../utils/Utils";
-import TaskClass, { ITaskToCreate } from "./task.model";
-
-let tasks: TaskClass[] = [];
-
-const dataFromLocalDb = getFromLocalDatabase(TASKS_LOCAL_DB_PATH) as TaskClass[];
-
-if (dataFromLocalDb) {
-  tasks = dataFromLocalDb;
-}
-
-const updateLocalDb = () => saveToLocalDatabase(TASKS_LOCAL_DB_PATH, tasks);
+import { Equal, getRepository } from "typeorm";
+import TaskClass, { TaskDtoType } from "../../entity/task.entity";
 
 export class TasksRepo {
   /**
@@ -18,6 +7,9 @@ export class TasksRepo {
    * @returns \{Promise\} Promise object represents collection of tasks
    */
   async getAll() {
+    const repository = getRepository(TaskClass);
+    const tasks = await repository.find();
+
     return tasks;
   }
 
@@ -27,7 +19,9 @@ export class TasksRepo {
    * @returns \{Promise\} Promise objects represents all tasks corresponding to the filter
    */
   async search({ key, value }: { key: keyof TaskClass, value: string }) {
-    const filteredCollection = tasks.filter((elem: TaskClass) => elem[key] === value);
+    const repository = getRepository(TaskClass);
+    const filteredCollection = repository.find({ [key]: Equal(value) });
+
     return filteredCollection;
   }
 
@@ -37,7 +31,10 @@ export class TasksRepo {
    * @returns \{Promise\} Promise object represents task with a passed id
    */
   async getOne(id: string) {
-    return tasks.find((elem) => elem.id === id);
+    const repository = getRepository(TaskClass);
+    const task = repository.findOne(id);
+
+    return task;
   }
 
   /**
@@ -45,11 +42,11 @@ export class TasksRepo {
    * @param newItem - object with task parameters;
    * @returns \{Promise\} Promise object represents newly create task
    */
-  async createOne(newItem: ITaskToCreate) {
+  async createOne(newItem: TaskDtoType) {
+    const repository = getRepository(TaskClass);
     const item = new TaskClass(newItem);
 
-    tasks.push(item);
-    updateLocalDb();
+    await repository.save(item)
 
     return item;
   }
@@ -59,8 +56,8 @@ export class TasksRepo {
    * @param id - task id string
    */
   async deleteOne(id: string) {
-    tasks = tasks.filter((elem) => elem.id !== id);
-    updateLocalDb();
+    const repository = getRepository(TaskClass);
+    await repository.delete({ id });
   }
 
   /**
@@ -68,9 +65,8 @@ export class TasksRepo {
    * @param filter - object with key to search and value to compare
    */
   async deleteMany({ key, value }: { key: keyof TaskClass, value: string }) {
-    const filteredCollection = tasks.filter((elem) => elem[key] !== value);
-    tasks = filteredCollection;
-    updateLocalDb();
+    const repository = getRepository(TaskClass);
+    await repository.delete({ [key]: Equal(value) });
   }
 
   /**
@@ -80,12 +76,13 @@ export class TasksRepo {
    * @returns \{Promise\} Promise object represents updated task
    */
   async updateOne(id: string, itemData: TaskClass) {
-    const itemIndex = tasks.findIndex((elem) => elem.id === id);
+    const repository = getRepository(TaskClass);
+    const taskToUpdate = repository.find({ id });
 
-    tasks[itemIndex] = { ...tasks[itemIndex], ...itemData };
-    updateLocalDb();
+    const updatedTask = { ...taskToUpdate, ...itemData };
+    await repository.save(updatedTask);
 
-    return tasks[itemIndex];
+    return updatedTask;
   }
 
   /**
@@ -93,22 +90,16 @@ export class TasksRepo {
    * @param filter - object with key to search and value to compare
    * @param updates - data to update each task
    */
-  async updateMany(filter: { key: keyof TaskClass, value: string }, updates: Partial<TaskClass>) {
-    const filteredItems = tasks.filter((elem: TaskClass) => elem[filter.key] === filter.value);
-    const filteredItemsIndexes = filteredItems.map((elem) => tasks.findIndex((collectionItem) => collectionItem.id === elem.id));
+  async updateMany({ key, value }: { key: keyof TaskClass, value: string }, updates: Partial<TaskClass>) {
+    const repository = getRepository(TaskClass);
+    const tasksToUpdate = await repository.find({ [key]: Equal(value) });
 
-    for (let i = 0; i < filteredItemsIndexes.length; i += 1) {
-      const index = filteredItemsIndexes[i];
+    const promises = tasksToUpdate.map((taskToUpdate: TaskClass) => {
+      const updatedBoard = { ...taskToUpdate, ...updates };
+      return repository.save(updatedBoard);
+    })
 
-      const newCollectionItem = {
-        ...tasks[index],
-        ...updates,
-      } as TaskClass;
-
-      tasks[index] = newCollectionItem;
-    }
-
-    updateLocalDb();
+    await Promise.all(promises);
   }
 }
 
