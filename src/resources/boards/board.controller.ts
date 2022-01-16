@@ -5,7 +5,7 @@ import SuccessHandler from '../../common/successHandler';
 import BoardServiceInstance from './board.service';
 import { getValidatedDataForBoard } from './board.validatior';
 import TaskService from '../tasks/task.service';
-import { BoardDtoType } from '../../entity/board.entity';
+import { BoardClass, BoardDtoType } from '../../entity/board.entity';
 import { ControllerType } from '../../types/controllerTypes';
 
 class BoardController {
@@ -65,7 +65,7 @@ class BoardController {
     const validatedData = validationResult.data as BoardDtoType;
     const newItem = await BoardServiceInstance.createOne(validatedData);
 
-    SuccessHandler.created(req, res, newItem, body);
+    SuccessHandler.created(req, res, BoardClass.toResponse(newItem), body);
   }
 
   /**

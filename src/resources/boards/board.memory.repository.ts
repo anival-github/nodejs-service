@@ -35,7 +35,11 @@ class BoardsRepo {
     const boardRepository = getRepository(BoardClass);
     const board = await boardRepository.findOne(id);
 
-    return board;
+    if (!board) {
+      return null;
+    }
+
+    return BoardClass.toResponse(board);
   }
 
   /**
@@ -93,7 +97,11 @@ class BoardsRepo {
     };
     await boardRepository.save(updatedBoard);
 
-    return updatedBoard;
+    return {
+      ...boardToUpdate,
+      title: itemData.title,
+      columns: itemData.columns,
+    };
   }
 
   /**

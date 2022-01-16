@@ -13,6 +13,11 @@ export type BoardDtoType = {
   columns: ColumnClass[];
 };
 
+export interface BoardClassToResponse {
+  id: string;
+  title: string;
+  columns: ColumnClass[];
+}
 @Entity()
 export class BoardClass implements IBoard {
 
@@ -40,6 +45,18 @@ export class BoardClass implements IBoard {
     this.id = uuidv4();
     this.title = title;
     this.columns = JSON.stringify(columns);
+  }
+
+  static toResponse(item: BoardClass): BoardClassToResponse {
+    const {
+      id, title, columns,
+    } = item;
+
+    return {
+      id,
+      title,
+      columns: JSON.parse(columns),
+    };
   }
 }
 
