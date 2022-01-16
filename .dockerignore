@@ -3,5 +3,14 @@ node_modules
 .idea
 .vscode
 test
-Dockerfile
+**/Dockerfile
 dataBase
+**/pg_data
+**/README.md
+**/docker-compose.yml
+**/logs
+**/.env*
+**/npm-debug.log
+**/LICENSE
+**/doc
+**/.git
