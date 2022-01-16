@@ -9,3 +9,5 @@ run-dev:
 
 stop:
 	docker stop boardsapp
+up:
+	docker-compose up --build
