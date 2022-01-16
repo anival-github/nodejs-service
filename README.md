@@ -21,7 +21,7 @@ git checkout task7
 ## Build docker image, create container and run
 
 ```
-docker-compose up
+docker-compose up --build
 ```
 
 ## Installing NPM modules
