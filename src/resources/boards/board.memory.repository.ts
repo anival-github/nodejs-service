@@ -39,7 +39,7 @@ class BoardsRepo {
       return null;
     }
 
-    return BoardClass.toResponse(board);
+    return board;
   }
 
   /**
@@ -92,16 +92,12 @@ class BoardsRepo {
 
     const updatedBoard = {
       ...boardToUpdate,
-      title: itemData.title,
-      columns: JSON.stringify(itemData.columns),
+      ...itemData,
     };
+
     await boardRepository.save(updatedBoard);
 
-    return {
-      ...boardToUpdate,
-      title: itemData.title,
-      columns: itemData.columns,
-    };
+    return updatedBoard;
   }
 
   /**

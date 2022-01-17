@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import type { BoardClass } from './board.entity';
 
 interface ITask {
   id: string;
@@ -51,6 +52,9 @@ class TaskClass implements ITask {
     nullable: true,
   })
   columnId: string | null;
+
+  @ManyToOne('BoardClass', 'tasks', { onDelete: 'CASCADE' })
+  board!: BoardClass;
 
   /**
    * Return newly created task

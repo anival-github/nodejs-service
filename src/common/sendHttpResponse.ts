@@ -1,5 +1,5 @@
 import User, { UserToResponseType } from "../entity/user.entity";
-import { BoardClass, BoardClassToResponse } from "../entity/board.entity";
+import { BoardClass } from "../entity/board.entity";
 import HTTP_STATUS_CODES from '../constants/httpResponseStatusCodes';
 import TaskClass from '../entity/task.entity';
 import { HTTP_RESPONCE } from "../types/httpTypes";
@@ -11,8 +11,7 @@ export type SuccessResultType = Record<string, string | number>
     | BoardClass[]
     | User[]
     | UserToResponseType
-    | UserToResponseType[]
-    | BoardClassToResponse;
+    | UserToResponseType[];
 
 export type ErrorResponseResultType = Record<string, string | number>;
 type ResultType = SuccessResultType | ErrorResponseResultType;

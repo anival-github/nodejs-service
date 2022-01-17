@@ -34,13 +34,10 @@ class UsersRepo {
     try {
       const userRepository = getRepository(User);
       const user = new User({ name, login, password });
-      const result = await userRepository.save(user);
-
-      console.log(result);
+      await userRepository.save(user);
 
       return user;
     } catch (error) {
-      console.log(error);
       logger.error('Error while saving user to db', {error});
       return null;
     }

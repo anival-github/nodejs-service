@@ -5,19 +5,11 @@ import ColumnClass from './column.entity';
 export interface IBoard {
   id: string;
   title: string;
-  columns: string;
-}
-
-export type BoardDtoType = {
-  title: string;
-  columns: ColumnClass[];
-};
-
-export interface BoardClassToResponse {
-  id: string;
-  title: string;
   columns: ColumnClass[];
 }
+
+export type BoardDtoType = Omit<IBoard, 'id'>;
+
 @Entity()
 export class BoardClass implements IBoard {
 
@@ -27,8 +19,8 @@ export class BoardClass implements IBoard {
   @Column()
   title: string;
 
-  @Column()
-  columns: string;
+  @Column({ nullable: false, type: "simple-json", default: [] })
+  columns: ColumnClass[];
 
   /**
    * Return newly created board
@@ -44,19 +36,7 @@ export class BoardClass implements IBoard {
   }) {
     this.id = uuidv4();
     this.title = title;
-    this.columns = JSON.stringify(columns);
-  }
-
-  static toResponse(item: BoardClass): BoardClassToResponse {
-    const {
-      id, title, columns,
-    } = item;
-
-    return {
-      id,
-      title,
-      columns: JSON.parse(columns),
-    };
+    this.columns = columns;
   }
 }
 

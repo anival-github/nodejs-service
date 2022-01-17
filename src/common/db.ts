@@ -22,8 +22,6 @@ export const connectToDb = async () => {
             logging: false
         });
 
-        console.log(result);
-
         if (!result) {
             logger.error('Error while connecting to database', { result });
             return null;

@@ -35,6 +35,14 @@ export class TaskMigration1642361482905 implements MigrationInterface {
                     name: "columnId",
                     type: "varchar",
                 }
+            ],
+            foreignKeys: [
+                {
+                    referencedTableName: 'board_class',
+                    referencedColumnNames: ['id'],
+                    columnNames: ['board'],
+                    onDelete: 'CASCADE',
+                }
             ]
         }), true)
     }
