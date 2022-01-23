@@ -3,9 +3,11 @@ export const ROUTES = {
   BOARDS: /^\/boards/,
   TASKS: /^\/tasks/,
   BOARD_ID_TASKS: /^\/boards\/([0-9A-Fa-f-]+)\/tasks/,
+  LOGIN: /^\/login/,
 };
 
 export const STRICT_ROUTES = {
+  LOGIN: /^\/login(\/?)$/,
   USERS: /^\/users(\/?)$/,
   USERS_ID: /^\/users\/([0-9A-Fa-f-]+)(\/?)$/,
   BOARDS: /^\/boards(\/?)$/,
