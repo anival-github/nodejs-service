@@ -39,7 +39,7 @@ createConnection({
   migrationsRun: true,
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 }).then((connection) => {
-  logger.info('Connection is created', { connection });
+  logger.info('Connection is created');
 
   const app = http.createServer(
   /**

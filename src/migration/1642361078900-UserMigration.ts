@@ -1,4 +1,6 @@
 import {MigrationInterface, QueryRunner, Table} from "typeorm";
+import { encript } from "../common/encripting";
+import User from "../entity/user.entity";
 
 export class UserMigration1642361078900 implements MigrationInterface {
 
@@ -24,7 +26,23 @@ export class UserMigration1642361078900 implements MigrationInterface {
                     type: "varchar",
                 }
             ]
-        }), true)
+        }), true);
+
+        const adminPasswordHash = await encript('admin');
+
+        const admin = new User({
+            name: 'admin',
+            login: 'admin',
+            password: adminPasswordHash,
+        });
+
+        queryRunner
+            .manager
+            .createQueryBuilder()
+            .insert()
+            .into("user")
+            .values([admin])
+            .execute()
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
