@@ -78,7 +78,7 @@ createConnection({
   });
 
   app.listen(config.PORT, () => {
-    console.log(`App is running on http://localhost:${config.PORT}`);
+    logger.info(`App is running on http://localhost:${config.PORT}`);
   });
 
-}).catch(error => console.log('Error while creating connection', error));
+}).catch(error => logger.info('Error while creating connection', error));
