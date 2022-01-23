@@ -13,4 +13,6 @@ export interface IErrorHandler {
     badRequest: HandlerFuncType;
     notFound: HandlerFuncType;
     internalServerError: HandlerFuncType;
+    unauthorized: HandlerFuncType;
+    forbidden: HandlerFuncType;
 }

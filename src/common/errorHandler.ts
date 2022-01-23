@@ -18,6 +18,20 @@ const ErrorHandler: IErrorHandler = {
     sendHttpResponse(res, statusCode, result);
   },
 
+  forbidden: (req, res, result, body = "") => {
+    const statusCode = HTTP_STATUS_CODES.FORBIDDEN;
+
+    logHttpRequest(req, statusCode, body);
+    sendHttpResponse(res, statusCode, result);
+  },
+
+  unauthorized: (req, res, result, body = "") => {
+    const statusCode = HTTP_STATUS_CODES.UNAUTHORIZED;
+
+    logHttpRequest(req, statusCode, body);
+    sendHttpResponse(res, statusCode, result);
+  },
+
 /**
  * Send 404 status code response
  * @param req - http request class IncomingMessage
