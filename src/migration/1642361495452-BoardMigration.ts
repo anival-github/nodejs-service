@@ -1,10 +1,10 @@
 import {MigrationInterface, QueryRunner, Table} from "typeorm";
+import logger from "../common/logger";
 
 export class BoardMigration1642361495452 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        const dbs = await queryRunner.getDatabases();
-        console.log('current databases: ', dbs);
+        logger.info('Migration is applied');
 
         await queryRunner.createTable(new Table({
             name: "board_class",
