@@ -45,7 +45,9 @@
     ]
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "dotenv": "10.0.0",
+    "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.41",
@@ -54,6 +56,8 @@
     "yamljs": "0.3.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.0",
     "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
