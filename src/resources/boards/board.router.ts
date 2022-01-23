@@ -3,6 +3,7 @@ import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
 import errorHandlers from '../../common/errorHandler';
 import { RouterType } from '../../types/routerTypes';
+import { verifyToken } from '../../common/authorization';
 
 /**
  * Handle board related requests
@@ -11,6 +12,13 @@ import { RouterType } from '../../types/routerTypes';
  */
 const boardsRouter: RouterType = (req, res) => {
   const url = new URL(req.url || '', `http://${req.headers.host}`);
+
+  const token = verifyToken(req);
+
+  if (!token) {
+    errorHandlers.unauthorized(req, res, { message: 'Failed to authanticate token' });
+    return;
+  }
 
   switch (true) {
     case url.pathname.match(STRICT_ROUTES.BOARDS) && req.method === HTTP_METHODS.GET:

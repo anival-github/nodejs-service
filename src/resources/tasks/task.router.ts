@@ -3,6 +3,7 @@ import HTTP_METHODS from '../../constants/httpMethods';
 import { STRICT_ROUTES } from '../../common/routes';
 import ErrorHandler from '../../common/errorHandler';
 import { RouterType } from '../../types/routerTypes';
+import { verifyToken } from '../../common/authorization';
 
 /**
  * Handle task related requests
@@ -11,6 +12,13 @@ import { RouterType } from '../../types/routerTypes';
  */
 const tasksRouter: RouterType = (req, res) => {
   const url = new URL(req.url || '', `http://${req.headers.host}`);
+
+  const token = verifyToken(req);
+
+  if (!token) {
+    ErrorHandler.unauthorized(req, res, { message: 'Failed to authanticate token' });
+    return;
+  }
 
   switch (true) {
     case url.pathname.match(STRICT_ROUTES.TASKS) && req.method === HTTP_METHODS.GET:

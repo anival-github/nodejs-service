@@ -14,6 +14,8 @@ import { BoardClass } from './entity/board.entity';
 import { UserMigration1642361078900 } from './migration/1642361078900-UserMigration';
 import { TaskMigration1642361482905 } from './migration/1642361482905-TaskMigration';
 import { BoardMigration1642361495452 } from './migration/1642361495452-BoardMigration';
+import logger from './common/logger';
+import loginRouter from './resources/login/login.router';
 
 createConnection({
   type: "postgres",
@@ -35,9 +37,9 @@ createConnection({
     BoardMigration1642361495452,
   ],
   migrationsRun: true,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 }).then((connection) => {
-
-  console.log('Connection is created, connection: ', connection);
+  logger.info('Connection is created', { connection });
 
   const app = http.createServer(
   /**
@@ -52,6 +54,10 @@ createConnection({
      switch (true) {
        case !!url.pathname.match(ROUTES.TASKS) || !!url.pathname.match(ROUTES.BOARD_ID_TASKS):
          tasksRouter(req, res);
+         break;
+
+       case !!url.pathname.match(ROUTES.LOGIN):
+         loginRouter(req, res);
          break;
 
        case !!url.pathname.match(ROUTES.USERS):

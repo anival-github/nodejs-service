@@ -25,6 +25,13 @@ class UsersRepo {
     return user;
   }
 
+  async search(searchParameters: Partial<User>) {
+    const repository = getRepository(User);
+    const user = await repository.findOne({ where: searchParameters });
+
+    return user;
+  }
+
   /**
  * Create one user
  * @param user - object with name: string, login: string, password: string;
