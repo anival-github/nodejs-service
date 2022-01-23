@@ -8,8 +8,7 @@ dotenv.config({
 const config = {
   PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV || 4000,
-  MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
-  JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
+  JWT_SECRET_KEY: process.env.JWT_SECRET_KEY || 'key',
   AUTH_MODE: process.env.AUTH_MODE === 'true',
   LOGGER_LEVEL: process.env.LOGGER_LEVEL || '4',
   POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
