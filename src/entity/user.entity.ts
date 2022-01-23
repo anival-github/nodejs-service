@@ -10,6 +10,7 @@ interface IUser {
 
 export type UserToResponseType = Omit<IUser, 'password'>;
 export type UserDtoType = Omit<IUser, 'id'>;
+export type LoginDtoType = Pick<IUser, 'login' | 'password'>;
 
 @Entity()
 class User implements IUser {
