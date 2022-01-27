@@ -75,31 +75,23 @@ class UserController {
   updateOne: ControllerType = async (req, res) => {
     const id = extractFirstId(req);
     const isIdValid = validate(id);
-    const body = await getBodyData(req, res) as UserDtoType;
+    const newUserData = await getBodyData(req, res) as UserDtoType;
 
     if (!isIdValid) {
-      errorHandler.badRequest(req, res, { message: 'UserId is not valid' }, body);
+      errorHandler.badRequest(req, res, { message: 'UserId is not valid' }, newUserData);
       return
     }
 
     const user = await usersService.getOne(id);
 
     if (!user) {
-      errorHandler.notFound(req, res, { message: 'User not found' }, body);
+      errorHandler.notFound(req, res, { message: 'User not found' }, newUserData);
       return
     }
 
-    const { name, login, password } = body;
-
-    const newUserData = {
-      name: name || user.name,
-      login: login || user.login,
-      password: password || user.password,
-    };
-
     const updatedUser = await usersService.updateOne(id, newUserData) as User;
 
-    successHandler.OK(req, res, User.toResponse(updatedUser), body);
+    successHandler.OK(req, res, User.toResponse(updatedUser), newUserData);
   };
 
   /**

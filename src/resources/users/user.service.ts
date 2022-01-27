@@ -48,7 +48,17 @@ class UserService {
  * @param newUserData - data to update a particular user
  * @returns \{Promise\} Promise object represents updated user
  */
-  updateOne = async (id: string, newUserData: UserDtoType) => usersRepo.updateOne(id, newUserData);
+  updateOne = async (id: string, newUserData: UserDtoType) => {
+    const userDataToUpdate = newUserData;
+
+    if (newUserData.password) {
+      const encriptedPassword = await encript(newUserData.password);
+
+      userDataToUpdate.password = encriptedPassword;
+    }
+
+    return usersRepo.updateOne(id, newUserData);
+  };
 }
 
 export default new UserService();
