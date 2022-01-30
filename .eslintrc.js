@@ -1,4 +1,4 @@
-{
+export default {
   "parser": "@typescript-eslint/parser",
   "root": true,
   "env": {
@@ -13,7 +13,8 @@
     "ecmaFeatures": {
       "impliedStrict": true
     },
-    "project": "./tsconfig.json"
+    "project": "tsconfig.json",
+    "tsconfigRootDir": __dirname,
   },
   "settings": {
     "noInlineConfig": true,
