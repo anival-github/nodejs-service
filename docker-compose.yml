@@ -4,7 +4,7 @@ services:
     image: postgres:14.1-alpine
     container_name: postgres
     ports:
-      - 5433:5433
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
       - pg_data:/var/lib/postgresql/data/pgdata
     environment:
@@ -12,7 +12,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
       PGDATA: ${PGDATA}
-      PGPORT: 5433
+      PGPORT: ${POSTGRES_PORT}
     restart: always
     networks:
       - app-net
