@@ -30,7 +30,7 @@ export class User extends BaseUser {
       name: 'USER',
       login: 'user',
       password: 'P@55w0rd',
-    },
+    }
   ) {
     super();
     this.id = uuidv4();

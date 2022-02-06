@@ -13,7 +13,7 @@ const loggerLevels: ILoggerLevels = {
 };
 
 const maxLoggerLevelToShow = Object.keys(loggerLevels).find(
-  (levelKey) => loggerLevels[levelKey] === Number(process.env.LOGGER_LEVEL),
+  (levelKey) => loggerLevels[levelKey] === Number(process.env.LOGGER_LEVEL)
 );
 
 export const loggerConfig = {

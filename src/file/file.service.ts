@@ -27,7 +27,7 @@ export class FileService {
     } catch (error) {
       throw new HttpException(
         'Error while saving file occured',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }

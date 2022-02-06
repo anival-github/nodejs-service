@@ -15,7 +15,7 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private tasksService: TasksService,
-    private bcryptService: BcryptService,
+    private bcryptService: BcryptService
   ) {}
 
   /**
@@ -58,7 +58,7 @@ export class UsersService {
 
     await this.tasksService.updateMany(
       { key: 'userId', value: id },
-      { userId: null },
+      { userId: null }
     );
   }
 
@@ -102,7 +102,7 @@ export class UsersService {
    */
   async update(
     id: string,
-    updateUserDto: UpdateUserDto,
+    updateUserDto: UpdateUserDto
   ): Promise<ReturnUserDto> {
     const userToUpdate = await this.usersRepository.findOne(id);
 

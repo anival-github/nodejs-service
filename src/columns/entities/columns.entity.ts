@@ -24,7 +24,7 @@ export class Columns implements IColumns {
     { title, order }: CreateColumnDto = {
       title: 'COLUMN',
       order: 0,
-    },
+    }
   ) {
     this.id = uuidv4();
     this.title = title;

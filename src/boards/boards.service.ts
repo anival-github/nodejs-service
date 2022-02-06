@@ -11,7 +11,7 @@ import { SearchBoardDto } from './dto/search-board.dto';
 export class BoardsService {
   constructor(
     @InjectRepository(Board)
-    private boardsRepository: Repository<Board>,
+    private boardsRepository: Repository<Board>
   ) {}
 
   /**

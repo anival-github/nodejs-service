@@ -22,7 +22,7 @@ import { Board } from './entities/board.entity';
 export class BoardsController {
   constructor(
     private readonly boardsService: BoardsService,
-    private readonly tasksService: TasksService,
+    private readonly tasksService: TasksService
   ) {}
 
   /**
@@ -79,7 +79,7 @@ export class BoardsController {
   @Put(':id')
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updateBoardDto: UpdateBoardDto,
+    @Body() updateBoardDto: UpdateBoardDto
   ) {
     return this.boardsService.update(id, updateBoardDto);
   }

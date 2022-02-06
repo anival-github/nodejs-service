@@ -12,7 +12,7 @@ import { DeleteUserDto } from 'src/users/dto/delete-user.dto';
 export class TasksService {
   constructor(
     @InjectRepository(Task)
-    private tasksRepository: Repository<Task>,
+    private tasksRepository: Repository<Task>
   ) {}
 
   /**

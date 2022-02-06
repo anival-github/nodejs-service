@@ -30,7 +30,7 @@ export class UserMigration1643594217751 implements MigrationInterface {
           },
         ],
       }),
-      true,
+      true
     );
 
     const adminPasswordHash = await bcrypt.hash('admin', SALT_ROUNDS);

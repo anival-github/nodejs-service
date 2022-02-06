@@ -24,7 +24,7 @@ export class Board implements BaseBoard {
     { title, columns }: CreateBoardDto = {
       title: 'BOARD',
       columns: [],
-    },
+    }
   ) {
     this.id = uuidv4();
     this.title = title;

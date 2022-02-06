@@ -42,7 +42,7 @@ export class TasksController {
   @Post()
   create(
     @Body() createTaskDto: CreateTaskDto,
-    @Param('boardId') boardId: string,
+    @Param('boardId') boardId: string
   ) {
     const dataToCreateTask = { ...createTaskDto, boardId };
     return this.tasksService.create(dataToCreateTask);
@@ -73,7 +73,7 @@ export class TasksController {
   @Put(':id')
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updateTaskDto: UpdateTaskDto,
+    @Body() updateTaskDto: UpdateTaskDto
   ) {
     return this.tasksService.update(id, updateTaskDto);
   }

@@ -21,7 +21,7 @@ export class BoardMigration1643594195923 implements MigrationInterface {
           },
         ],
       }),
-      true,
+      true
     );
   }
 

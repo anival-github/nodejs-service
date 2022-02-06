@@ -9,7 +9,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly bcryptService: BcryptService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtService
   ) {}
 
   async createJwt({ login, password }: CreateJwtDto) {
@@ -18,19 +18,19 @@ export class AuthService {
     if (!user) {
       throw new HttpException(
         'Bad login/password combination',
-        HttpStatus.FORBIDDEN,
+        HttpStatus.FORBIDDEN
       );
     }
 
     const isPasswordCorrect = this.bcryptService.compare(
       password,
-      user.password,
+      user.password
     );
 
     if (!isPasswordCorrect) {
       throw new HttpException(
         'Bad login/password combination',
-        HttpStatus.FORBIDDEN,
+        HttpStatus.FORBIDDEN
       );
     }
 
