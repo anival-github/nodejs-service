@@ -26,14 +26,17 @@ export class TaskMigration1643594212877 implements MigrationInterface {
           {
             name: 'userId',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'boardId',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'columnId',
             type: 'varchar',
+            isNullable: true,
           },
         ],
         foreignKeys: [
@@ -45,7 +48,7 @@ export class TaskMigration1643594212877 implements MigrationInterface {
           },
         ],
       }),
-      true,
+      true
     );
   }
 

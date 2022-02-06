@@ -1,3 +1,4 @@
+import { Board } from '../../boards/entities/board.entity';
 import { PrimaryColumn, Column, ManyToOne, Entity } from 'typeorm';
 import { ReturnTaskDto } from '../dto/return-task.dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,7 +25,7 @@ export class Task implements ITask {
   })
   userId: string | null;
 
-  @ManyToOne('Board', 'tasks', { onDelete: 'CASCADE' })
+  // @ManyToOne('Board', 'tasks', { onDelete: 'CASCADE' })
   @Column({
     type: String,
     nullable: true,
@@ -36,6 +37,9 @@ export class Task implements ITask {
     nullable: true,
   })
   columnId: string | null;
+
+  @ManyToOne('Board', 'tasks', { onDelete: 'CASCADE' })
+  board!: Board;
 
   /**
    * Return newly created task
@@ -50,7 +54,7 @@ export class Task implements ITask {
       userId: null,
       boardId: null,
       columnId: null,
-    },
+    }
   ) {
     this.id = uuidv4();
     this.title = title;
