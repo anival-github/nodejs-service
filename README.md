@@ -14,7 +14,7 @@ git clone https://github.com/anival-github/nodejs2021Q4-service.git
 ## Go to the correct branch
 
 ```
-git checkout nodejs2021Q4-service
+git checkout task6
 ```
 
 ## Installing NPM modules
