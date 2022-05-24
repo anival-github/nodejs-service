@@ -1,0 +1,50 @@
+version: "3.0"
+services:
+  db:
+    image: postgres:14.1-alpine
+    container_name: postgres
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - pg_data:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: ${PGDATA}
+      PGPORT: ${POSTGRES_PORT}
+    restart: always
+    networks:
+      - app-net
+  app:
+    # image: anivaldocker/boardsapp
+    build: .
+    container_name: application
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+    restart: always
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+      # - ./:/app
+      - /app/node_modules
+      - storage:/app/data
+    links:
+      - db
+    networks:
+      - app-net
+    depends_on:
+      - db
+volumes:
+  storage:
+  pg_data:
+networks:
+  app-net:
+    name: app-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.220.0/24
