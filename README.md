@@ -15,7 +15,7 @@ git clone https://github.com/anival-github/nodejs2021Q4-service.git
 ## Go to the correct branch
 
 ```
-git checkout task9
+git checkout migration-to-nest
 ```
 
 ## Build docker image, create container and run
@@ -55,19 +55,3 @@ To run all tests with authorization
 ```
 npm run test:auth
 ```
-
-## Development
-
-If you're using VSCode, you can get a better developer experience from integration with [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extensions.
-
-### Auto-fix and format
-
-```
-npm run lint
-```
-
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
